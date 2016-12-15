@@ -20,6 +20,3 @@ func lookup(hash string ) {
     // Output: PONG <nil>
 }
 
-func main() {
-  lookup("test")
-}
