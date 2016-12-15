@@ -1,15 +1,18 @@
 // DOCUMENTME
-package router
+package main
 
 import (
-   "gopkg.in/redis.v5"
+	"gopkg.in/redis.v5"
+	"fmt"
+	"os"
+	"echo/lib/concat"
 )
 
-//open connection 
+// Open connection.
 var Client = redis.NewClient(&redis.Options{
-  Addr:     "localhost:6379",
-  Password: "", // no password set
-  DB:       0,  // use default DB
+  Addr: concat.Concat(os.Getenv("REDISHOST"), ":", os.Getenv("PORT")),
+  Password: "",
+  DB: 0,
 })
 
 //look up a key in redis and return its value
@@ -17,4 +20,10 @@ func lookup(hash string) (string) {
     value, _ := Client.Get(hash).Result()
     return value
 }
+
+func main() {
+  taco := lookup("test")
+  fmt.Println(taco)
+}
+  
 
