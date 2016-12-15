@@ -12,10 +12,18 @@ import (
 func Serve(port string) {
 	router := gin.Default()
 
+	router.GET("/", handleRequest)
+	router.POST("/", handleRequest)
+	router.PUT("/", handleRequest)
+	router.DELETE("/", handleRequest)
+	router.PATCH("/", handleRequest)
+	router.HEAD("/", handleRequest)
+	router.OPTIONS("/", handleRequest)
+
 	router.Run(concat.Concat(":", port))
 }
 
-// HandleRequest handles all requests and hands them off to the router package.
-func HandleRequest(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hey there"))
+// handleRequest handles all requests and hands them off to the router package.
+func handleRequest(c *gin.Context) {
+	c.String(http.StatusOK, "Hello world!")
 }
