@@ -12,13 +12,13 @@ import (
 func Serve(port string) {
 	router := gin.Default()
 
-	router.GET("/", handleRequest)
-	router.POST("/", handleRequest)
-	router.PUT("/", handleRequest)
-	router.DELETE("/", handleRequest)
-	router.PATCH("/", handleRequest)
-	router.HEAD("/", handleRequest)
-	router.OPTIONS("/", handleRequest)
+	router.GET("/:path", handleRequest)
+	router.POST("/:path", handleRequest)
+	router.PUT("/:path", handleRequest)
+	router.DELETE("/:path", handleRequest)
+	router.PATCH("/:path", handleRequest)
+	router.HEAD("/:path", handleRequest)
+	router.OPTIONS("/:path", handleRequest)
 
 	router.Run(concat.Concat(":", port))
 }

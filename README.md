@@ -5,6 +5,7 @@ Echo is a highly optimized caching mechanism.
 * Install Homebrew.
 * Install Go: `brew install go`
 * Install Glide: `brew install glide`
-* Run `go get golint`
+* Run `go get github.com/golang/lint/golint`
+* Run `go get github.com/pilu/fresh`
 * Clone this directory.
 * In this directory's root, run: `glide install`.
