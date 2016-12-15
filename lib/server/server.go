@@ -10,8 +10,19 @@ import (
 
 // Sets up an http server that handles all requests.
 func Serve(port string) {
+	// Create a new gin router.
 	router := gin.Default()
 
+	// Respond to / requests.
+	router.GET("/", handleRequest)
+	router.POST("/", handleRequest)
+	router.PUT("/", handleRequest)
+	router.DELETE("/", handleRequest)
+	router.PATCH("/", handleRequest)
+	router.HEAD("/", handleRequest)
+	router.OPTIONS("/", handleRequest)
+
+	// Respond to /* requests.
 	router.GET("/:path", handleRequest)
 	router.POST("/:path", handleRequest)
 	router.PUT("/:path", handleRequest)
@@ -20,6 +31,7 @@ func Serve(port string) {
 	router.HEAD("/:path", handleRequest)
 	router.OPTIONS("/:path", handleRequest)
 
+	// Start the server on the specified port.
 	router.Run(concat.Concat(":", port))
 }
 
