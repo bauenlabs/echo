@@ -4,13 +4,15 @@ package server
 
 import (
 	"echo/lib/concat"
+	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
 )
 
 // Sets up an http server that handles all requests.
 func Serve(port string) {
-	http.HandleFunc("*", HandleRequest)
-	http.ListenAndServe(concat.Concat(":", port), nil)
+	router := gin.Default()
+
+	router.Run(concat.Concat(":", port))
 }
 
 // HandleRequest handles all requests and hands them off to the router package.
