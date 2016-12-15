@@ -6,7 +6,7 @@ import (
    "fmt"
 )
 
-//preform a look up in redis
+//look up a key in redis and return its value
 func lookup(hash string ) {
     client := redis.NewClient(&redis.Options{
         Addr:     "localhost:6379",
