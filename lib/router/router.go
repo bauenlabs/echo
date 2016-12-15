@@ -3,7 +3,6 @@ package router
 
 import (
    "gopkg.in/redis.v5"
-   "fmt"
 )
 
 //open connection 
@@ -14,9 +13,8 @@ var Client = redis.NewClient(&redis.Options{
 })
 
 //look up a key in redis and return its value
-func lookup(hash string ) {
-    value, err := Client.Get(hash).Result()
-    fmt.Println(value, err)
-    // Output: PONG <nil>
+func lookup(hash string) (string) {
+    value, _ := Client.Get(hash).Result()
+    return value
 }
 
