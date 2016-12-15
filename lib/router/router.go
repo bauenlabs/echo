@@ -1,24 +1,21 @@
-// DOCUMENTME
+// Package router accepts a string and returns a cached value.
 package router
 
 import (
+	"echo/lib/concat"
 	"gopkg.in/redis.v5"
 	"os"
-	"echo/lib/concat"
 )
 
 // Open connection.
 var Client = redis.NewClient(&redis.Options{
-  Addr: concat.Concat(os.Getenv("REDISHOST"), ":", os.Getenv("PORT")),
-  Password: "",
-  DB: 0,
+	Addr:     concat.Concat(os.Getenv("REDISHOST"), ":", os.Getenv("PORT")),
+	Password: "",
+	DB:       0,
 })
 
-//look up a key in redis and return its value
-func Lookup(hash string) (string) {
-    value, _ := Client.Get(hash).Result()
-    return value
+// Look up a key in redis and return its value.
+func Lookup(hash string) string {
+	value, _ := Client.Get(hash).Result()
+	return value
 }
-
-  
-
