@@ -1,9 +1,8 @@
 // DOCUMENTME
-package main
+package router
 
 import (
 	"gopkg.in/redis.v5"
-	"fmt"
 	"os"
 	"echo/lib/concat"
 )
@@ -16,14 +15,10 @@ var Client = redis.NewClient(&redis.Options{
 })
 
 //look up a key in redis and return its value
-func lookup(hash string) (string) {
+func Lookup(hash string) (string) {
     value, _ := Client.Get(hash).Result()
     return value
 }
 
-func main() {
-  taco := lookup("test")
-  fmt.Println(taco)
-}
   
 
