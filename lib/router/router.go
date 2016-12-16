@@ -9,7 +9,10 @@ import (
 
 // Open connection.
 var Client = redis.NewClient(&redis.Options{
-	Addr:     concat.Concat(os.Getenv("REDISHOST"), ":", os.Getenv("PORT")),
+	Addr: concat.Concat(
+		os.Getenv("ECHO_REDIS_HOST"),
+		":",
+		os.Getenv("ECHO_REDIS_PORT")),
 	Password: "",
 	DB:       0,
 })
