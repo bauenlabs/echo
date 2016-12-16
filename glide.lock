@@ -1,5 +1,5 @@
-hash: 9d410fa5bb87bff88f64fc2e9c540f5d21020004966ac41472efb66c0fcde109
-updated: 2016-12-14T21:04:45.393982172-06:00
+hash: 3ed1fddff7c23bbdde2bee749eaaa5298de62cbde974e843dbab12f0fc36162d
+updated: 2016-12-15T18:09:41.133531193-06:00
 imports:
 - name: github.com/gin-gonic/gin
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
@@ -22,12 +22,20 @@ imports:
   version: d75a52659825e75fff6158388dddc6a5b04f9ba5
   subpackages:
   - unix
+- name: gopkg.in/bsm/ratelimit.v1
+  version: db14e161995a5177acef654cb0dd785e8ee8bc22
 - name: gopkg.in/gin-gonic/gin.v1
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
 - name: gopkg.in/go-playground/validator.v8
   version: c193cecd124b5cc722d7ee5538e945bdb3348435
 - name: gopkg.in/redis.v5
   version: c6acf2ed159b22defbd9f077686cff03eba1e9b3
+  subpackages:
+  - internal
+  - internal/consistenthash
+  - internal/hashtag
+  - internal/pool
+  - internal/proto
 - name: gopkg.in/yaml.v2
   version: a5b47d31c556af34a302ce5d659e6fea44d90de0
 testImports: []
