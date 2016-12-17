@@ -23,8 +23,14 @@ func Lookup(hash string) string {
 	return value
 }
 
-//Delete a Key, return 1 for sucess and 0 for failure
+//Delete a Key, return 1 for sucess and 0 for failure.
 func Delete(hash string) int64 {
-	value, _ := Client.Del(hash).Result()
-	return value
+	success, _ := Client.Del(hash).Result()
+	return success
+}
+
+// Create new key/value or update existing one.
+func Set(hash string, value string) string {
+	status, _ := Client.Set(hash, value, 0).Result()
+	return status
 }
