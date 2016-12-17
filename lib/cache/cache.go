@@ -1,5 +1,5 @@
 // Package router accepts a string and returns a cached value.
-package main
+package cache
 
 import (
 	"echo/lib/concat"
@@ -37,11 +37,8 @@ func Set(hash string, value string) string {
 	return status
 }
 
-func hashFunc(url string) uint64 {
-	data := []byte(url)
+// Generates murmur3 hash of the url, passed to the func as a string
+func hashFunc(urlString string) uint64 {
+	data := []byte(urlString)
 	return murmur3.Sum64(data)
-}
-
-func main() {
-	fmt.Println(hashFunc("lol"))
 }
