@@ -3,7 +3,6 @@ package cache
 
 import (
 	"echo/lib/concat"
-	"fmt"
 	"github.com/spaolacci/murmur3"
 	"gopkg.in/redis.v5"
 	"os"
