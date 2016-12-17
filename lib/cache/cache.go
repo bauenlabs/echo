@@ -3,6 +3,7 @@ package cache
 
 import (
 	"echo/lib/concat"
+	"github.com/spaolacci/murmur3"
 	"gopkg.in/redis.v5"
 	"os"
 )
@@ -33,4 +34,10 @@ func Delete(hash string) int64 {
 func Set(hash string, value string) string {
 	status, _ := Client.Set(hash, value, 0).Result()
 	return status
+}
+
+// Generates murmur3 hash of the url, passed to the func as a string
+func genHash(urlString string) uint64 {
+	data := []byte(urlString)
+	return murmur3.Sum64(data)
 }
