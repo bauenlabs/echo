@@ -44,7 +44,7 @@ func genHash(urlString string) uint64 {
 	return murmur3.Sum64(data)
 }
 
-// Process request context objects, check for cache
+// Process request context objects, check for cache.
 func Process(c *gin.Context) {
 	var url string = concat.Concat(
 		c.Request.Host,
