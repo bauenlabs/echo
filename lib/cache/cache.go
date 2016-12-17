@@ -37,7 +37,7 @@ func Set(hash string, value string) string {
 }
 
 // Generates murmur3 hash of the url, passed to the func as a string
-func hashFunc(urlString string) uint64 {
+func genHash(urlString string) uint64 {
 	data := []byte(urlString)
 	return murmur3.Sum64(data)
 }
