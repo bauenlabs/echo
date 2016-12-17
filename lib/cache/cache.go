@@ -4,8 +4,10 @@ package cache
 import (
 	"echo/lib/concat"
 	"github.com/spaolacci/murmur3"
+	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/redis.v5"
 	"os"
+	"strconv"
 )
 
 // Open connection.
@@ -40,4 +42,15 @@ func Set(hash string, value string) string {
 func genHash(urlString string) uint64 {
 	data := []byte(urlString)
 	return murmur3.Sum64(data)
+}
+
+// Process request context objects, check for cache.
+func Process(c *gin.Context) {
+	var url string = concat.Concat(
+		c.Request.Host,
+		c.Request.URL.Path,
+	)
+	var hash string = strconv.Itoa(int(genHash(url)))
+	value := Lookup(hash)
+	fmt.Println(value)
 }
