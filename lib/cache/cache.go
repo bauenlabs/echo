@@ -7,6 +7,7 @@ import (
 	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/redis.v5"
 	"os"
+	"strconv"
 )
 
 // Open connection.
@@ -44,5 +45,11 @@ func genHash(urlString string) uint64 {
 }
 
 func Process(c *gin.Context) {
-	pass
+	var url string = concat.Concat(
+		c.Request.Host,
+		c.Request.URL.Path,
+	)
+	var hash string = strconv.Itoa(int(genHash(url)))
+	value := Lookup(hash)
+	fmt.Println(value)
 }
