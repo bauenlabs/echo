@@ -2,7 +2,7 @@
 package main
 
 import (
-	"echo/lib/server"
+	"github.com/voiceis/echo/lib/server"
 )
 
 func main() {

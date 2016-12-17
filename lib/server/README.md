@@ -1,6 +1,6 @@
 # server
 --
-    import "echo/lib/server"
+    import "github.com/voiceis/echo/lib/server"
 
 Package server sets up a cache server that handles requests and delegates them
 to a package router.

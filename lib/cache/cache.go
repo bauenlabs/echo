@@ -2,8 +2,8 @@
 package cache
 
 import (
-	"echo/lib/concat"
 	"github.com/spaolacci/murmur3"
+	"github.com/voiceis/echo/lib/concat"
 	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/redis.v5"
 	"os"
