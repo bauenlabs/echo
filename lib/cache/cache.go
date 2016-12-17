@@ -1,5 +1,5 @@
 // Package router accepts a string and returns a cached value.
-package router
+package cache
 
 import (
 	"echo/lib/concat"
@@ -20,5 +20,11 @@ var Client = redis.NewClient(&redis.Options{
 // Look up a key in redis and return its value.
 func Lookup(hash string) string {
 	value, _ := Client.Get(hash).Result()
+	return value
+}
+
+//Delete a Key, return 1 for sucess and 0 for failure
+func Delete(hash string) int64 {
+	value, _ := Client.Del(hash).Result()
 	return value
 }
