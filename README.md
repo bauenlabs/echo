@@ -16,7 +16,7 @@ Echo is a highly optimized caching mechanism.
 This project uses `fresh` to listen for file changes, and re-compile and run automatically. To use fresh, simply run the `fresh` command in a terminal instance, and leave it running.
 
 ### Documentation
-This project should adhere to the documentation standards outlined by Go's creaters, which you can find [here](https://blog.golang.org/godoc-documenting-go-code). This project uses a tool called [godocdown]() to generate `README.md` files for each of it's packages. When creating or updating a package, before submitting changes, be sure to run the following command for your package:
+This project should adhere to the documentation standards outlined by Go's creaters, which you can find [here](https://blog.golang.org/godoc-documenting-go-code). This project uses a tool called [godocdown](https://github.com/robertkrimen/godocdown) to generate `README.md` files for each of it's packages. When creating or updating a package, before submitting changes, be sure to run the following command for your package:
 ```bash
 godocdown github.com/voiceis/echo/lib/yourpackage > system/path/to/your/package/README.md
 ```
