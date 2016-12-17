@@ -16,12 +16,11 @@ func Serve(port string) {
 
 	// Respond to /* requests.
 	router.GET("/*param", handleGET)
-	router.POST("/*param", handlePOST)
-	router.PUT("/*param", handlePUT)
-	router.DELETE("/*param", handleDELETE)
-	router.PATCH("/*param", handlePATCH)
-	router.HEAD("/*param", handleHEAD)
-	router.OPTIONS("/*param", handleOPTIONS)
+	router.POST("/*param", commission)
+	router.PUT("/*param", commission)
+	router.DELETE("/*param", commission)
+	router.PATCH("/*param", commission)
+	router.OPTIONS("/*param", commission)
 
 	// Start the server on the specified port.
 	router.Run(concat.Concat(":", port))
@@ -34,32 +33,6 @@ func handleGET(c *gin.Context) {
 	c.String(http.StatusOK, "Hello world!")
 }
 
-// handlePOST handles POST requests and passes them off to the router.
-func handlePOST(c *gin.Context) {
-
-}
-
-// handlePUT handles PUT requests and passes them off to the router.
-func handlePUT(c *gin.Context) {
-
-}
-
-// handleDELETE handles DELETE requests and passes them off to the router.
-func handleDELETE(c *gin.Context) {
-
-}
-
-// handlePATCH handles PATCH requests and passes them off to the router.
-func handlePATCH(c *gin.Context) {
-
-}
-
-// handleHEAD handles HEAD requests and passes them off to the router.
-func handleHEAD(c *gin.Context) {
-
-}
-
-// handleOPTIONS handles OPTIONS requests and passes them off to the router.
-func handleOPTIONS(c *gin.Context) {
+func commission(c *gin.Context) {
 
 }
