@@ -58,6 +58,7 @@ func handleGET(c *gin.Context) {
 	c.String(http.StatusOK, "Hello world!")
 }
 
+// Spans the commissioner and skips the cache entirely.
 func commission(c *gin.Context) {
 
 }
