@@ -4,6 +4,7 @@ package cache
 import (
 	"echo/lib/concat"
 	"github.com/spaolacci/murmur3"
+	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/redis.v5"
 	"os"
 )
@@ -40,4 +41,8 @@ func Set(hash string, value string) string {
 func genHash(urlString string) uint64 {
 	data := []byte(urlString)
 	return murmur3.Sum64(data)
+}
+
+func Process(c *gin.Context) {
+	pass
 }
