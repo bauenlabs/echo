@@ -2,6 +2,7 @@
 package main
 
 import (
+	"echo/lib/log"
 	"echo/lib/server"
 )
 
