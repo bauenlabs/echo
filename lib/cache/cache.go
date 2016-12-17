@@ -23,7 +23,7 @@ func Lookup(hash string) string {
 	return value
 }
 
-//Delete a Key, return 1 for sucess and 0 for failure.
+// Delete a Key, return 1 for sucess and 0 for failure.
 func Delete(hash string) int64 {
 	success, _ := Client.Del(hash).Result()
 	return success
