@@ -1,8 +1,10 @@
 // Package router accepts a string and returns a cached value.
-package cache
+package main
 
 import (
 	"echo/lib/concat"
+	"fmt"
+	"github.com/spaolacci/murmur3"
 	"gopkg.in/redis.v5"
 	"os"
 )
@@ -33,4 +35,13 @@ func Delete(hash string) int64 {
 func Set(hash string, value string) string {
 	status, _ := Client.Set(hash, value, 0).Result()
 	return status
+}
+
+func hashFunc(url string) uint64 {
+	data := []byte(url)
+	return murmur3.Sum64(data)
+}
+
+func main() {
+	fmt.Println(hashFunc("lol"))
 }
