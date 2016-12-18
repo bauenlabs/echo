@@ -2,7 +2,6 @@
 package cache
 
 import (
-	"fmt"
 	"github.com/spaolacci/murmur3"
 	"github.com/voiceis/echo/lib/concat"
 	"gopkg.in/gin-gonic/gin.v1"
@@ -13,7 +12,7 @@ import (
 
 // Defualt Global Variables
 var (
-	RedisPort string = "6380"
+	RedisPort string = "6379"
 	RedisHost string = "localhost"
 	Client    *redis.Client
 )
@@ -62,12 +61,12 @@ func genHash(urlString string) uint64 {
 }
 
 // Process request context objects, check for cache.
-func Process(c *gin.Context) {
+func Process(c *gin.Context) string {
 	var url string = concat.Concat(
 		c.Request.Host,
 		c.Request.URL.Path,
 	)
 	var hash string = strconv.Itoa(int(genHash(url)))
-	value := Lookup(hash)
-	fmt.Println(value)
+	payload := Lookup(hash)
+	return payload
 }
