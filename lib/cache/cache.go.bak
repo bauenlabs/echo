@@ -1,38 +1,25 @@
-// The cache package interacts with the Redis store containing cached items
+// Package router accepts a string and returns a cached value.
 package cache
 
 import (
+	"echo/lib/concat"
 	"fmt"
 	"github.com/spaolacci/murmur3"
-	"github.com/voiceis/echo/lib/concat"
 	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/redis.v5"
 	"os"
 	"strconv"
 )
 
-// Defualt Global Variables
-var (
-	RedisPort string = "6380"
-	RedisHost string = "localhost"
-	Client    *redis.Client
-)
-
-// The init function sets global variables and defines a Redis client
+//Init function of package -- set needs variables/config
 func init() {
-	port := os.Getenv("ECHO_REDIS_PORT")
-	host := os.Getenv("ECHO_REDIS_HOST")
-
-	if len(port) > 0 {
-		RedisPort = port
-	}
-
-	if len(host) > 0 {
-		RedisHost = host
-	}
-
-	Client = redis.NewClient(&redis.Options{
-		Addr:     concat.Concat(RedisHost, ":", RedisPort),
+	var RedisHost string = concat.Concat(
+		os.Getenv("ECHO_REDIS_HOST"),
+		":",
+		os.Getenv("ECHO_REDIS_PORT"),
+	)
+	var Client = redis.NewClient(&redis.Options{
+		Addr:     RedisHost,
 		Password: "",
 		DB:       0,
 	})
@@ -45,13 +32,13 @@ func Lookup(hash string) string {
 }
 
 // Delete a Key, return 1 for sucess and 0 for failure.
-func Delete(hash string) int64 {
+func Delete(hash string, Client *redis.Client) int64 {
 	success, _ := Client.Del(hash).Result()
 	return success
 }
 
 // Create new key/value or update existing one.
-func Set(hash string, value string) string {
+func Set(hash string, value string, Client *redis.Client) string {
 	status, _ := Client.Set(hash, value, 0).Result()
 	return status
 }
@@ -63,7 +50,7 @@ func genHash(urlString string) uint64 {
 }
 
 // Process request context objects, check for cache.
-func Process(c *gin.Context) {
+func Process(c *gin.Context, Client *redis.Client) {
 	var url string = concat.Concat(
 		c.Request.Host,
 		c.Request.URL.Path,

@@ -2,21 +2,18 @@
 --
     import "github.com/voiceis/echo/lib/cache"
 
-Package router accepts a string and returns a cached value.
+The cache package interacts with the Redis store containing cached items
 
 ## Usage
 
 ```go
-var Client = redis.NewClient(&redis.Options{
-	Addr: concat.Concat(
-		os.Getenv("ECHO_REDIS_HOST"),
-		":",
-		os.Getenv("ECHO_REDIS_PORT")),
-	Password: "",
-	DB:       0,
-})
+var (
+	RedisPort string = "6380"
+	RedisHost string = "localhost"
+	Client    *redis.Client
+)
 ```
-Open connection.
+Defualt Global Variables
 
 #### func  Delete
 
