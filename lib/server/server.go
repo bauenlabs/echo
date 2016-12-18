@@ -3,8 +3,8 @@
 package server
 
 import (
-	"echo/lib/concat"
 	"fmt"
+	"github.com/voiceis/echo/lib/concat"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
 )
