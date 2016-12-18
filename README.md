@@ -8,7 +8,7 @@ Echo is a highly optimized caching mechanism.
 * Install Glide: `brew install glide`
 * Install golint: `go get github.com/golang/lint/golint`
 * Install fresh: `go get github.com/pilu/fresh`
-* Install godocdown: `go get github.com/robertkrimen/godocdown/godocdown
+* Install godocdown: `go get github.com/robertkrimen/godocdown/godocdown`
 * Clone this directory.
 * In this directory's root, run: `glide install`.
 
