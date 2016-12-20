@@ -29,6 +29,7 @@ func init() {
 	if len(host) > 0 {
 		RedisHost = host
 	}
+
 	Client = redis.NewClient(&redis.Options{
 		Addr:     concat.Concat(RedisHost, ":", RedisPort),
 		Password: "",
