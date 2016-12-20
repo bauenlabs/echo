@@ -3,8 +3,9 @@
 package server
 
 import (
-	"echo/lib/concat"
 	"fmt"
+	"github.com/voiceis/echo/lib/cache"
+	"github.com/voiceis/echo/lib/concat"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
 	"os"
@@ -55,7 +56,8 @@ func Serve() {
 func handleGET(c *gin.Context) {
 	fmt.Println(c.Param("param"))
 	fmt.Println(c.Request.URL.Query())
-	c.String(http.StatusOK, "Hello world!")
+	payload := []byte(cache.Process(c))
+	c.Data(http.StatusOK, "text/html", payload)
 }
 
 // Spans the commissioner and skips the cache entirely.

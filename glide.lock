@@ -1,5 +1,5 @@
-hash: c8556726308b11a3e81d2fb503c91f73ea21213abecd27f71c4711c48035eae6
-updated: 2016-12-16T21:41:34.268162443-06:00
+hash: 33946228a1fe2bda40d118719c7553fd0cda90e74281c641860bfad304703238
+updated: 2016-12-17T15:31:08.381849553-06:00
 imports:
 - name: github.com/gin-gonic/gin
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
@@ -16,6 +16,8 @@ imports:
   version: 30a891c33c7cde7b02a981314b4228ec99380cca
 - name: github.com/mgutz/ansi
   version: c286dcecd19ff979eeb73ea444e479b903f2cfcb
+- name: github.com/spaolacci/murmur3
+  version: 0d12bf811670bf6a1a63828dfbd003eded177fce
 - name: golang.org/x/net
   version: f315505cf3349909cdf013ea56690da34e96a451
   subpackages:
