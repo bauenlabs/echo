@@ -36,3 +36,12 @@ This project should adhere to the documentation standards outlined by Go's creat
 ```bash
 godocdown github.com/voiceis/echo/lib/yourpackage > system/path/to/your/package/README.md
 ```
+
+## Testing
+All code in this project should be tested. To get an idea how to write tests, check out some of the existing tests. There should be clear examples on how assertions, mocks, etc are created.
+
+### Running Tests
+To run the tests in this project, simply run:
+```bash
+go test -cover
+```
