@@ -49,7 +49,3 @@ func Serve() {
 	// Start the server on the specified port.
 	router.Run(concat.Concat(":", ServerPort))
 }
-
-// handleGET handles POST requests and passes them off to the router.
-func handleGET(c *gin.Context) {
-}
