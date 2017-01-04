@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	server.Serve("8000")
+	server.Serve()
 }

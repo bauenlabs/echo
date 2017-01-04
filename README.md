@@ -12,6 +12,22 @@ Echo is a highly optimized caching mechanism.
 * Clone this directory.
 * In this directory's root, run: `glide install`.
 
+### Environment Variables
+* Ensure the following environment variables exist and have valid values:
+```shell
+# Path at which Redis can be contacted.
+export ECHO_REDIS_HOST="localhost"
+
+# Port at which Redis can be contacted.
+export ECHO_REDIS_PORT="6379"
+
+# Port on which the Echo server should run.
+export ECHO_SERVER_PORT="8000"
+
+# Logging mode for server.
+export ECHO_SERVER_MODE="release|debug|test"
+```
+
 ### Workflow
 This project uses `fresh` to listen for file changes, and re-compile and run automatically. To use fresh, simply run the `fresh` command in a terminal instance, and leave it running.
 
@@ -21,3 +37,11 @@ This project should adhere to the documentation standards outlined by Go's creat
 godocdown github.com/voiceis/echo/lib/yourpackage > system/path/to/your/package/README.md
 ```
 
+## Testing
+All code in this project should be tested. To get an idea how to write tests, check out some of the existing tests. There should be clear examples on how assertions, mocks, etc are created.
+
+### Running Tests
+To run the tests in this project, simply run:
+```bash
+go test -cover
+```
