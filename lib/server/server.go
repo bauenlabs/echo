@@ -3,12 +3,9 @@
 package server
 
 import (
-	"fmt"
-	"github.com/voiceis/echo/lib/cache"
 	"github.com/voiceis/echo/lib/commissioner"
 	"github.com/voiceis/echo/lib/concat"
 	"gopkg.in/gin-gonic/gin.v1"
-	"net/http"
 	"os"
 )
 
@@ -41,7 +38,7 @@ func Serve() {
 	// Create a new gin router.
 	router := gin.Default()
 
-	// Respond to /* requests.
+	// Respond to all requests.
 	router.GET("/*param", commissioner.Spawn)
 	router.POST("/*param", commissioner.Spawn)
 	router.PUT("/*param", commissioner.Spawn)
@@ -55,9 +52,4 @@ func Serve() {
 
 // handleGET handles POST requests and passes them off to the router.
 func handleGET(c *gin.Context) {
-	fmt.Println(c.Param("param"))
-	fmt.Println(c.Request.URL.Query())
-	payload := []byte(cache.Process(c))
-
-	c.Data(http.StatusOK, "text/html", payload)
 }
