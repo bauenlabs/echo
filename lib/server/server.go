@@ -5,6 +5,7 @@ package server
 import (
 	"fmt"
 	"github.com/voiceis/echo/lib/cache"
+	"github.com/voiceis/echo/lib/commissioner"
 	"github.com/voiceis/echo/lib/concat"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
@@ -16,7 +17,7 @@ var (
 	ServerMode string = "release"
 )
 
-// Configure gin.
+// Configures gin from environment variables.
 func init() {
 	// Load port and mode env variables if they exist.
 	port := os.Getenv("ECHO_SERVER_PORT")
@@ -41,12 +42,12 @@ func Serve() {
 	router := gin.Default()
 
 	// Respond to /* requests.
-	router.GET("/*param", handleGET)
-	router.POST("/*param", commission)
-	router.PUT("/*param", commission)
-	router.DELETE("/*param", commission)
-	router.PATCH("/*param", commission)
-	router.OPTIONS("/*param", commission)
+	router.GET("/*param", commissioner.Spawn)
+	router.POST("/*param", commissioner.Spawn)
+	router.PUT("/*param", commissioner.Spawn)
+	router.DELETE("/*param", commissioner.Spawn)
+	router.PATCH("/*param", commissioner.Spawn)
+	router.OPTIONS("/*param", commissioner.Spawn)
 
 	// Start the server on the specified port.
 	router.Run(concat.Concat(":", ServerPort))
@@ -57,10 +58,6 @@ func handleGET(c *gin.Context) {
 	fmt.Println(c.Param("param"))
 	fmt.Println(c.Request.URL.Query())
 	payload := []byte(cache.Process(c))
+
 	c.Data(http.StatusOK, "text/html", payload)
-}
-
-// Spans the commissioner and skips the cache entirely.
-func commission(c *gin.Context) {
-
 }
