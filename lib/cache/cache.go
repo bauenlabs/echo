@@ -4,8 +4,10 @@ package cache
 import (
 	"github.com/spaolacci/murmur3"
 	"github.com/voiceis/echo/lib/concat"
+	"github.com/voiceis/echo/lib/log"
 	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/redis.v5"
+	"io/ioutil"
 	"os"
 	"strconv"
 )
@@ -38,7 +40,7 @@ func init() {
 }
 
 // Look up a key in redis and return its value.
-func Lookup(hash string) string {
+func Get(hash string) string {
 	value, _ := Client.Get(hash).Result()
 	return value
 }
@@ -61,13 +63,30 @@ func genHash(urlString string) uint64 {
 	return murmur3.Sum64(data)
 }
 
-// Process request context objects, check for cache.
-func Process(c *gin.Context) string {
+// Takes a request object and generates a cache key from the request details.
+func genCacheKey(c *gin.Context) string {
 	var url string = concat.Concat(
 		c.Request.Host,
 		c.Request.URL.Path,
 	)
-	var hash string = strconv.Itoa(int(genHash(url)))
-	payload := Lookup(hash)
+
+	return strconv.Itoa(int(genHash(url)))
+}
+
+// Process request context objects, check for cache.
+func Lookup(c *gin.Context) string {
+	payload := Get(genCacheKey(c))
 	return payload
+}
+
+// Takes a request object and generates a cache value for the specified key.
+func Create(c *gin.Context) string {
+	body, err := ioutil.ReadAll(c.Request.Body)
+
+	// If there's an error with parsing the request body, fail.
+	if err != nil {
+		log.Fatal(err, 1)
+	}
+
+	return Set(genCacheKey(c), string(body))
 }

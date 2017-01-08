@@ -12,6 +12,7 @@ var (
 	InfoLog    *log.Logger
 	WarningLog *log.Logger
 	ErrorLog   *log.Logger
+	FatalLog   *log.Logger
 )
 
 func init() {
@@ -48,6 +49,12 @@ func Warning(logString string) {
 }
 
 // Error prints a error log.
-func Error(logString string) {
-	ErrorLog.Println(logString)
+func Error(err error) {
+	ErrorLog.Println(err)
+}
+
+// Fatal prints a fatal error log.
+func Fatal(err error, statusCode int) {
+	FatalLog.Fatal(err)
+	os.Exit(statusCode)
 }
