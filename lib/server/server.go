@@ -11,26 +11,26 @@ import (
 
 var (
 	ServerPort string = "80"
-	ServerMode string = "release"
+	EchoMode   string = "release"
 )
 
 // Configures gin from environment variables.
 func init() {
 	// Load port and mode env variables if they exist.
 	port := os.Getenv("ECHO_SERVER_PORT")
-	mode := os.Getenv("ECHO_SERVER_MODE")
+	mode := os.Getenv("ECHO_MODE")
 
 	// If a port environment variable is specified, override default.
 	if len(port) > 0 {
-		ServerPort = port
+		EchoMode = port
 	}
 
 	// If a mode environment variable is specified, override default.
 	if len(mode) > 0 {
-		ServerMode = mode
+		EchoMode = mode
 	}
 
-	gin.SetMode(ServerMode)
+	gin.SetMode(EchoMode)
 }
 
 // Sets up an http server that handles all requests.

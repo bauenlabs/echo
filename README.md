@@ -25,7 +25,7 @@ export ECHO_REDIS_PORT="6379"
 export ECHO_SERVER_PORT="8000"
 
 # Logging mode for server.
-export ECHO_SERVER_MODE="release|debug|test"
+export ECHO_MODE="release|debug|test"
 ```
 
 ### Workflow
