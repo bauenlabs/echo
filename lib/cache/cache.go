@@ -12,17 +12,20 @@ import (
 	"strconv"
 )
 
-// Defualt Global Variables
+// Default Global Variables.
 var (
-	RedisPort string = "6379"
-	RedisHost string = "localhost"
-	Client    *redis.Client
+	RedisPort     string = "6379"
+	RedisHost     string = "localhost"
+	RedisPassword string = ""
+	RedisDB       int    = 0
+	Client        *redis.Client
 )
 
-// The init function sets global variables and defines a Redis client
+// The init function sets global variables and defines a Redis client.
 func init() {
 	port := os.Getenv("ECHO_REDIS_PORT")
 	host := os.Getenv("ECHO_REDIS_HOST")
+	password := os.Getenv("ECHO_REDIS_PASSWORD")
 
 	if len(port) > 0 {
 		RedisPort = port
@@ -32,10 +35,14 @@ func init() {
 		RedisHost = host
 	}
 
+	if len(password) > 0 {
+		RedisPassword = password
+	}
+
 	Client = redis.NewClient(&redis.Options{
 		Addr:     concat.Concat(RedisHost, ":", RedisPort),
-		Password: "",
-		DB:       0,
+		Password: RedisPassword,
+		DB:       RedisDB,
 	})
 }
 
@@ -57,7 +64,7 @@ func Set(hash string, value string) string {
 	return status
 }
 
-// Generates murmur3 hash of the url, passed to the func as a string
+// Generates murmur3 hash of the url, passed to the func as a string.
 func genHash(urlString string) uint64 {
 	data := []byte(urlString)
 	return murmur3.Sum64(data)

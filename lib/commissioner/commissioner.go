@@ -1,10 +1,11 @@
-// Package comissioner takes a gin request and fetches the response from the
-// cache or the actual host (proxy).
+// Package comissioner contains a Spawn method that takes a gin request and
+// fetches the response from the cache or the actual host (proxy).
 package commissioner
 
 import (
 	"fmt"
 	"github.com/voiceis/echo/lib/cache"
+	"github.com/voiceis/echo/lib/proxy"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
 	"os"
