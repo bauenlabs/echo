@@ -3,6 +3,7 @@
 package proxy
 
 import (
+	"github.com/voiceis/echo/lib/host"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
 	"time"
@@ -15,6 +16,14 @@ var netClient = &http.Client{
 // Takes a gin request and fetches the request results from the proxy host.
 func Spawn(c *gin.Context) *http.Response {
 	var response *http.Response
+
+	// Fetch the origin's IP address.
+	originIp := host.Lookup(c.Request.Host)
+
+	// If no IP exists for this host, respond with a 404.
+	if len(originIp) == 0 {
+		c.Data(http.StatusNotFound, "text/html", []byte("Unable to find this website."))
+	}
 
 	// Execute the request depending on the type of source request. This is more
 	// performant than using reflection.. (I think).

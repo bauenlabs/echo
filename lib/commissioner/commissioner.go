@@ -5,7 +5,6 @@ package commissioner
 import (
 	"fmt"
 	"github.com/voiceis/echo/lib/cache"
-	"github.com/voiceis/echo/lib/proxy"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
 	"os"
@@ -41,7 +40,6 @@ func Spawn(c *gin.Context) {
 		// the value that the proxy returned.
 		if len(payload) == 0 {
 			fmt.Println("asdf")
-
 		}
 	} else {
 		// Spawn proxy, relay value.
