@@ -49,6 +49,6 @@ func Lookup(url string) string {
 
 // Create a host in the cache.
 func Create(url string, ip string) string {
-	status, _ := Client.Set(ip, url, 0).Result()
+	status, _ := Client.Set(url, ip, 0).Result()
 	return status
 }
