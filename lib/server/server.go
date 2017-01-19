@@ -22,7 +22,7 @@ func init() {
 
 	// If a port environment variable is specified, override default.
 	if len(port) > 0 {
-		EchoMode = port
+		ServerPort = port
 	}
 
 	// If a mode environment variable is specified, override default.
