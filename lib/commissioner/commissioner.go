@@ -3,8 +3,8 @@
 package commissioner
 
 import (
-	"fmt"
 	"github.com/voiceis/echo/lib/cache"
+	"github.com/voiceis/echo/lib/proxy"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
 	"os"
@@ -23,27 +23,47 @@ func init() {
 	}
 }
 
+// Fetches a value for the given request from the cache, and responds to the
+// client. Returns true if a response was sent, or false if response failed.
+func respondWithCache(c *gin.Context) bool {
+	payload := []byte(cache.Lookup(c))
+
+	if len(payload) > 0 {
+		c.Data(http.StatusOK, "text/html", payload)
+		return true
+	}
+
+	return false
+}
+
+// Fetches a value for the given request from the proxy origin, and responds to
+// the client. Returns true if a response was sent, or false if response failed.
+func respondWithProxy(c *gin.Context) bool {
+	//response := proxy.Spawn(c)
+
+	return true
+}
+
+// Responds to a request with an Echo failure, which occurs only if all other
+// attempts to fetch a response fail.
+func respondWithFailure(c *gin.Context) {
+	c.Data(http.StatusOK, "text/html", []byte("HAHAAAAAAAAAAA COCK SUCKER"))
+}
+
 // Takes a gin request and delegates the request to the cache or proxy depending
 // on the request type, and whether or not the response is in the cache.
 func Spawn(c *gin.Context) {
-	//fmt.Println(c.Param("param"))
-	//fmt.Println(c.Request.URL.Query())
-
-	// Initialize an empty payload.
-	payload := []byte("")
-
+	// If this is a GET method, look in the cache before delegating to the proxy.
 	if c.Request.Method == http.MethodGet || c.Request.Method == "" {
-		payload = []byte(cache.Lookup(c))
-
-		// If the payload coming from the cache is empty, spawn a proxy, and fetch
-		// the desired value for the cache key. If Echo is in the test mode, cache
-		// the value that the proxy returned.
-		if len(payload) == 0 {
-			fmt.Println("asdf")
+		// Respond from cache. If that failes, fall back to proxy.
+		if !respondWithCache(c) {
+			if !respondWithProxy(c) {
+				respondWithFailure(c)
+			}
 		}
 	} else {
-		// Spawn proxy, relay value.
+		if !respondWithProxy(c) {
+			respondWithFailure(c)
+		}
 	}
-
-	c.Data(http.StatusOK, "text/html", payload)
 }
