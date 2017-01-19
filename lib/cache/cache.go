@@ -4,10 +4,8 @@ package cache
 import (
 	"github.com/spaolacci/murmur3"
 	"github.com/voiceis/echo/lib/concat"
-	"github.com/voiceis/echo/lib/log"
 	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/redis.v5"
-	"io/ioutil"
 	"os"
 	"strconv"
 )
@@ -86,14 +84,8 @@ func Lookup(c *gin.Context) string {
 	return payload
 }
 
-// Takes a request object and generates a cache value for the specified key.
-func Create(c *gin.Context) string {
-	body, err := ioutil.ReadAll(c.Request.Body)
-
-	// If there's an error with parsing the request body, fail.
-	if err != nil {
-		log.Fatal(err, 1)
-	}
-
+// Takes a request object and a body, generates a cache key, and inserts into
+// the cache store.
+func Create(c *gin.Context, body string) string {
 	return Set(genCacheKey(c), string(body))
 }

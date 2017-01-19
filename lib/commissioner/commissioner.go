@@ -6,6 +6,7 @@ import (
 	"github.com/voiceis/echo/lib/cache"
 	"github.com/voiceis/echo/lib/proxy"
 	"gopkg.in/gin-gonic/gin.v1"
+	"io/ioutil"
 	"net/http"
 	"os"
 )
@@ -27,9 +28,10 @@ func init() {
 // client. Returns true if a response was sent, or false if response failed.
 func respondWithCache(c *gin.Context) bool {
 	payload := []byte(cache.Lookup(c))
+	contentType := c.Request.Header.Get("Content-Type")
 
 	if len(payload) > 0 {
-		c.Data(http.StatusOK, "text/html", payload)
+		c.Data(http.StatusOK, contentType, payload)
 		return true
 	}
 
@@ -39,7 +41,19 @@ func respondWithCache(c *gin.Context) bool {
 // Fetches a value for the given request from the proxy origin, and responds to
 // the client. Returns true if a response was sent, or false if response failed.
 func respondWithProxy(c *gin.Context) bool {
-	//response := proxy.Spawn(c)
+	// Fetch a response object.
+	response := proxy.Spawn(c)
+	c.Response = response
+	body, err := ioutil.ReadAll(c.Request.Body)
+	contentType := response.Header.Get("Content-Type")
+
+	// Respond to the client.
+	c.Data(response.StatusCode, contentType, string(body))
+
+	// If Echo is in release mode, cache
+	if EchoMode == "test" && canBeCached(c) {
+		cache.Create(c, string(body))
+	}
 
 	return true
 }
@@ -50,11 +64,21 @@ func respondWithFailure(c *gin.Context) {
 	c.Data(http.StatusOK, "text/html", []byte("HAHAAAAAAAAAAA COCK SUCKER"))
 }
 
+// Inspects a context object, and returns a bool indicating  whether or not a
+// cache object could or should exist for the request response.
+func canBeCached(c *gin.Context) bool {
+	if (c.Request.Method == http.MethodGet || c.Request.Method == "") && response.StatusCode == http.StatusOK {
+		return true
+	}
+
+	return false
+}
+
 // Takes a gin request and delegates the request to the cache or proxy depending
 // on the request type, and whether or not the response is in the cache.
 func Spawn(c *gin.Context) {
-	// If this is a GET method, look in the cache before delegating to the proxy.
-	if c.Request.Method == http.MethodGet || c.Request.Method == "" {
+	// Only check the cache if this request should be cached.
+	if canBeCached(c) {
 		// Respond from cache. If that failes, fall back to proxy.
 		if !respondWithCache(c) {
 			if !respondWithProxy(c) {
