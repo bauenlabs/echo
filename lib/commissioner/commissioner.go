@@ -42,16 +42,22 @@ func respondWithCache(c *gin.Context) bool {
 // the client. Returns true if a response was sent, or false if response failed.
 func respondWithProxy(c *gin.Context) bool {
 	// Fetch a response object.
-	response := proxy.Spawn(c)
-	c.Response = response
-	body, err := ioutil.ReadAll(c.Request.Body)
+	response, err := proxy.Spawn(c)
+
+	// If the response is an error, send that up the chain.
+	if err != nil {
+		c.Data(500, "text/html", []byte("false go away"))
+		return true
+	}
+
+	body, _ := ioutil.ReadAll(response.Body)
 	contentType := response.Header.Get("Content-Type")
 
 	// Respond to the client.
-	c.Data(response.StatusCode, contentType, string(body))
+	c.Data(response.StatusCode, contentType, []byte(string(body)))
 
 	// If Echo is in release mode, cache
-	if EchoMode == "test" && canBeCached(c) {
+	if EchoMode == "test" && canBeCached(c) && response.StatusCode == http.StatusOK {
 		cache.Create(c, string(body))
 	}
 
@@ -67,7 +73,7 @@ func respondWithFailure(c *gin.Context) {
 // Inspects a context object, and returns a bool indicating  whether or not a
 // cache object could or should exist for the request response.
 func canBeCached(c *gin.Context) bool {
-	if (c.Request.Method == http.MethodGet || c.Request.Method == "") && response.StatusCode == http.StatusOK {
+	if c.Request.Method == http.MethodGet || c.Request.Method == "" {
 		return true
 	}
 

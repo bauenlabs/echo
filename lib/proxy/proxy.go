@@ -29,8 +29,9 @@ func fetchUrl(c *gin.Context) string {
 }
 
 // Takes a gin request and fetches the request results from the proxy host.
-func Spawn(c *gin.Context) *http.Response {
+func Spawn(c *gin.Context) (*http.Response, error) {
 	var response *http.Response
+	var err error
 	originUrl := fetchUrl(c)
 
 	// Execute the request depending on the type of source request. This is more
@@ -38,7 +39,7 @@ func Spawn(c *gin.Context) *http.Response {
 	// @TODO: Benchmark switch vs reflection.
 	switch c.Request.Method {
 	case http.MethodGet:
-		response, _ = netClient.Get(originUrl)
+		response, err = netClient.Get(originUrl)
 	case http.MethodPost:
 	case http.MethodDelete:
 	case http.MethodPut:
@@ -48,5 +49,5 @@ func Spawn(c *gin.Context) *http.Response {
 		response, _ = netClient.Get(originUrl)
 	}
 
-	return response
+	return response, err
 }
