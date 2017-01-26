@@ -8,6 +8,7 @@ import (
 	"github.com/voiceis/echo/lib/host"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -19,35 +20,31 @@ func fetchUrl(c *gin.Context) string {
 	// Fetch the origin's IP address.
 	originIp := host.Lookup(c.Request.Host)
 	var url string = concat.Concat(
+		"http://",
 		originIp,
 		c.Request.URL.Path,
 	)
-
-	fmt.Println(url)
 
 	return url
 }
 
 // Takes a gin request and fetches the request results from the proxy host.
 func Spawn(c *gin.Context) (*http.Response, error) {
-	var response *http.Response
-	var err error
 	originUrl := fetchUrl(c)
 
-	// Execute the request depending on the type of source request. This is more
-	// performant than using reflection.. (I think).
-	// @TODO: Benchmark switch vs reflection.
-	switch c.Request.Method {
-	case http.MethodGet:
-		response, err = netClient.Get(originUrl)
-	case http.MethodPost:
-	case http.MethodDelete:
-	case http.MethodPut:
-	case http.MethodPatch:
-	case http.MethodOptions:
-	default:
-		response, _ = netClient.Get(originUrl)
+	// Create a request.
+	request, _ := http.NewRequest(c.Request.Method, originUrl, nil)
+
+	// Make sure the proxy request has all the correct headers.
+	for k, v := range c.Request.Header {
+		fmt.Println(k)
+		request.Header.Set(k, strings.Join(v, ""))
 	}
 
+	// Add a host header.
+	request.Header.Set("Host", c.Request.Host)
+
+	// Perform the request and return it.
+	response, err := netClient.Do(request)
 	return response, err
 }

@@ -4,6 +4,7 @@ package commissioner
 
 import (
 	"github.com/voiceis/echo/lib/cache"
+	"github.com/voiceis/echo/lib/log"
 	"github.com/voiceis/echo/lib/proxy"
 	"gopkg.in/gin-gonic/gin.v1"
 	"io/ioutil"
@@ -46,6 +47,7 @@ func respondWithProxy(c *gin.Context) bool {
 
 	// If the response is an error, send that up the chain.
 	if err != nil {
+		log.Error(err)
 		c.Data(500, "text/html", []byte("false go away"))
 		return true
 	}
