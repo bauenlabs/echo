@@ -8,6 +8,7 @@ import (
 	"github.com/voiceis/echo/lib/host"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -35,11 +36,12 @@ func Spawn(c *gin.Context) (*http.Response, error) {
 	// Create a request.
 	request, _ := http.NewRequest(c.Request.Method, originUrl, nil)
 
-	// Make sure the proxy request has all the correct headers.
-	for k, v := range c.Request.Header {
-		fmt.Println(k)
-		request.Header.Set(k, strings.Join(v, ""))
-	}
+	// Set up request object.
+	request.Host
+	request.Header = c.Request.Header
+	request.Proto = c.Request.Proto
+	request.ProtoMajor = c.Request.ProtoMajor
+	request.ProtoMinor = c.Request.ProtoMinor
 
 	// Add a host header.
 	request.Header.Set("Host", c.Request.Host)
