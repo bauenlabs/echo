@@ -3,6 +3,7 @@
 package server
 
 import (
+	"github.com/voiceis/echo/lib/cache"
 	"github.com/voiceis/echo/lib/commissioner"
 	"github.com/voiceis/echo/lib/concat"
 	"gopkg.in/gin-gonic/gin.v1"
@@ -31,6 +32,9 @@ func init() {
 	}
 
 	gin.SetMode(EchoMode)
+
+	// Make sure error pages are cached and ready to be served.
+	cache.Set("proxyError", "<!DOCTYPE html><html dir=ltr lang=en-US><head><title>:( Host not found</title><meta charset=utf-8><meta content=\"noindex, nofollow\"name=robots></head><body><header><h1 id=title>Unable to find host</h1></header><section id=descriptiong><p>This host was not found within Echo, so Echo cannot find a cached response. If you are the owner of this site, please contact an Echo administrator.</p><p>Echo's owners and mantainers appologize for this inconvenience :( We'll be looking into it shortly, and using this as an opportunity to improve our system.</p></section></body></html>")
 }
 
 // Sets up an http server that handles all requests.

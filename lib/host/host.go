@@ -2,6 +2,7 @@
 package host
 
 import (
+	"errors"
 	"github.com/voiceis/echo/lib/concat"
 	"gopkg.in/redis.v5"
 	"os"
@@ -42,9 +43,14 @@ func init() {
 }
 
 // Fetch a host IP for a url.
-func Lookup(url string) string {
-	value, _ := Client.Get(url).Result()
-	return value
+func Lookup(url string) (string, error) {
+	value, err := Client.Get(url).Result()
+
+	if err != nil || len(value) <= 0 {
+		err = errors.New("Host not found.")
+	}
+
+	return value, err
 }
 
 // Create a host in the cache.

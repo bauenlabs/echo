@@ -48,7 +48,7 @@ func respondWithProxy(c *gin.Context) bool {
 	// If the response is an error, send that up the chain.
 	if err != nil {
 		log.Error(err)
-		c.Data(500, "text/html", []byte("false go away"))
+		c.Data(500, "text/html", []byte(cache.Get("proxyError")))
 		return true
 	}
 
@@ -69,7 +69,7 @@ func respondWithProxy(c *gin.Context) bool {
 // Responds to a request with an Echo failure, which occurs only if all other
 // attempts to fetch a response fail.
 func respondWithFailure(c *gin.Context) {
-	c.Data(http.StatusOK, "text/html", []byte("HAHAAAAAAAAAAA COCK SUCKER"))
+	c.Data(http.StatusOK, "text/html", []byte("HAHAAAAAAAAAAA"))
 }
 
 // Inspects a context object, and returns a bool indicating  whether or not a
