@@ -32,11 +32,10 @@ func respondWithCache(c *gin.Context) bool {
 	contentType := c.Request.Header.Get("Content-Type")
 
 	if len(payload) > 0 {
+		log.Info("Responding with Cache.")
 		c.Data(http.StatusOK, contentType, payload)
 		return true
 	}
-
-	log.Info("Responding with Cache.")
 
 	return false
 }
