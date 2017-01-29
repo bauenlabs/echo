@@ -36,6 +36,8 @@ func respondWithCache(c *gin.Context) bool {
 		return true
 	}
 
+	log.Info("Responding with Cache.")
+
 	return false
 }
 
@@ -60,8 +62,11 @@ func respondWithProxy(c *gin.Context) bool {
 
 	// If Echo is in release mode, cache
 	if EchoMode == "test" && canBeCached(c) && response.StatusCode == http.StatusOK {
+		log.Info("Inserting item into cache.")
 		cache.Create(c, string(body))
 	}
+
+	log.Info("Responding with Proxy")
 
 	return true
 }
@@ -69,7 +74,7 @@ func respondWithProxy(c *gin.Context) bool {
 // Responds to a request with an Echo failure, which occurs only if all other
 // attempts to fetch a response fail.
 func respondWithFailure(c *gin.Context) {
-	c.Data(http.StatusOK, "text/html", []byte("HAHAAAAAAAAAAA"))
+	c.Data(404, "text/html", []byte(cache.Get("generalError")))
 }
 
 // Inspects a context object, and returns a bool indicating  whether or not a

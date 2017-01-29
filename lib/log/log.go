@@ -31,6 +31,10 @@ func init() {
 	ErrorLog = log.New(os.Stderr,
 		"ERROR: ",
 		log.Ldate|log.Ltime|log.Lshortfile)
+
+	FatalLog = log.New(os.Stderr,
+		"FATAL ERROR: ",
+		log.Ldate|log.Ltime|log.Lshortfile)
 }
 
 // Trace prints a trace log.

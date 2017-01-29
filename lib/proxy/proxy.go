@@ -54,6 +54,9 @@ func Spawn(c *gin.Context) (*http.Response, error) {
 	// Add a host header.
 	request.Header.Set("Host", c.Request.Host)
 
+	// Do not accept any forms of encoding.
+	request.Header.Set("Accept-Encoding", "")
+
 	// Perform the request and return it.
 	response, err := netClient.Do(request)
 	return response, err
