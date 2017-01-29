@@ -1,5 +1,5 @@
-hash: c8107f1d99e63d0ffce6487d424068b9f5013d19119d6af38ee06d173229035c
-updated: 2017-01-24T21:21:55.012100696-06:00
+hash: c90d8d0197e43c4b68d8f45576e7834fcdaf5deccaa22a77d14b0a2a6eac7de6
+updated: 2017-01-29T14:35:18.687290714-06:00
 imports:
 - name: github.com/gin-gonic/gin
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
@@ -10,18 +10,10 @@ imports:
   version: 2402d76f3d41f928c7902a765dfc872356dd3aad
   subpackages:
   - proto
-- name: github.com/google/go-querystring
-  version: 53e6ce116135b80d037921a7fdd5138cf32d7a8a
-  subpackages:
-  - query
-- name: github.com/levigross/grequests
-  version: 3f92c0acb6cd7f2b11aa81f82a33783249fc1bcd
 - name: github.com/manucorporat/sse
   version: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
 - name: github.com/mattn/go-isatty
   version: 30a891c33c7cde7b02a981314b4228ec99380cca
-- name: github.com/mgutz/ansi
-  version: c286dcecd19ff979eeb73ea444e479b903f2cfcb
 - name: github.com/spaolacci/murmur3
   version: 0d12bf811670bf6a1a63828dfbd003eded177fce
 - name: github.com/stretchr/testify
@@ -32,7 +24,6 @@ imports:
   version: f315505cf3349909cdf013ea56690da34e96a451
   subpackages:
   - context
-  - publicsuffix
 - name: golang.org/x/sys
   version: d75a52659825e75fff6158388dddc6a5b04f9ba5
   subpackages:
@@ -44,7 +35,7 @@ imports:
 - name: gopkg.in/go-playground/validator.v8
   version: c193cecd124b5cc722d7ee5538e945bdb3348435
 - name: gopkg.in/redis.v5
-  version: 8829ddcd8bdb333e477cc845946c4b9b2ef66280
+  version: 9cd49656897843b8f2bf3d9639230cb7aec90d6c
   subpackages:
   - internal
   - internal/consistenthash
