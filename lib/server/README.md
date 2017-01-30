@@ -7,9 +7,16 @@ to a package router.
 
 ## Usage
 
+```go
+var (
+	ServerPort string = "80"
+	EchoMode   string = "release"
+)
+```
+
 #### func  Serve
 
 ```go
-func Serve(port string)
+func Serve()
 ```
 Sets up an http server that handles all requests.

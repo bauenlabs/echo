@@ -8,12 +8,22 @@ The cache package interacts with the Redis store containing cached items
 
 ```go
 var (
-	RedisPort string = "6380"
-	RedisHost string = "localhost"
-	Client    *redis.Client
+	RedisPort     string = "6379"
+	RedisHost     string = "localhost"
+	RedisPassword string = ""
+	RedisDB       int    = 0
+	Client        *redis.Client
 )
 ```
-Defualt Global Variables
+Default Global Variables.
+
+#### func  Create
+
+```go
+func Create(c *gin.Context, body string) string
+```
+Takes a request object and a body, generates a cache key, and inserts into the
+cache store.
 
 #### func  Delete
 
@@ -22,17 +32,17 @@ func Delete(hash string) int64
 ```
 Delete a Key, return 1 for sucess and 0 for failure.
 
-#### func  Lookup
+#### func  Get
 
 ```go
-func Lookup(hash string) string
+func Get(hash string) string
 ```
 Look up a key in redis and return its value.
 
-#### func  Process
+#### func  Lookup
 
 ```go
-func Process(c *gin.Context)
+func Lookup(c *gin.Context) string
 ```
 Process request context objects, check for cache.
 
