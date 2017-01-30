@@ -31,6 +31,11 @@ func init() {
 		EchoMode = mode
 	}
 
+	// If the app is being profiled, always run gin in release mode.
+	if EchoMode == "profile" {
+		EchoMode = "release"
+	}
+
 	gin.SetMode(EchoMode)
 
 	// Make sure error pages are cached and ready to be served.

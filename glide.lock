@@ -1,5 +1,5 @@
 hash: c90d8d0197e43c4b68d8f45576e7834fcdaf5deccaa22a77d14b0a2a6eac7de6
-updated: 2017-01-29T14:35:18.687290714-06:00
+updated: 2017-01-29T18:46:30.208395838-06:00
 imports:
 - name: github.com/gin-gonic/gin
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
@@ -16,6 +16,12 @@ imports:
   version: 30a891c33c7cde7b02a981314b4228ec99380cca
 - name: github.com/spaolacci/murmur3
   version: 0d12bf811670bf6a1a63828dfbd003eded177fce
+- name: github.com/stackimpact/stackimpact-go
+  version: d390d46f2e5ff56519f4b3c9fd2bcce99d323887
+  subpackages:
+  - internal
+  - internal/pprof/profile
+  - internal/pprof/trace
 - name: github.com/stretchr/testify
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
   subpackages:
