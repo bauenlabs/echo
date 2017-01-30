@@ -1,5 +1,5 @@
-hash: c8107f1d99e63d0ffce6487d424068b9f5013d19119d6af38ee06d173229035c
-updated: 2016-12-19T19:02:57.284323605-06:00
+hash: c90d8d0197e43c4b68d8f45576e7834fcdaf5deccaa22a77d14b0a2a6eac7de6
+updated: 2017-01-29T14:35:18.687290714-06:00
 imports:
 - name: github.com/gin-gonic/gin
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
@@ -14,12 +14,12 @@ imports:
   version: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
 - name: github.com/mattn/go-isatty
   version: 30a891c33c7cde7b02a981314b4228ec99380cca
-- name: github.com/mgutz/ansi
-  version: c286dcecd19ff979eeb73ea444e479b903f2cfcb
 - name: github.com/spaolacci/murmur3
   version: 0d12bf811670bf6a1a63828dfbd003eded177fce
 - name: github.com/stretchr/testify
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
+  subpackages:
+  - assert
 - name: golang.org/x/net
   version: f315505cf3349909cdf013ea56690da34e96a451
   subpackages:
@@ -35,7 +35,7 @@ imports:
 - name: gopkg.in/go-playground/validator.v8
   version: c193cecd124b5cc722d7ee5538e945bdb3348435
 - name: gopkg.in/redis.v5
-  version: c6acf2ed159b22defbd9f077686cff03eba1e9b3
+  version: 9cd49656897843b8f2bf3d9639230cb7aec90d6c
   subpackages:
   - internal
   - internal/consistenthash
@@ -44,4 +44,12 @@ imports:
   - internal/proto
 - name: gopkg.in/yaml.v2
   version: a5b47d31c556af34a302ce5d659e6fea44d90de0
-testImports: []
+testImports:
+- name: github.com/davecgh/go-spew
+  version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
+  subpackages:
+  - spew
+- name: github.com/pmezard/go-difflib
+  version: 792786c7400a136282c1664665ae0a8db921c6c2
+  subpackages:
+  - difflib

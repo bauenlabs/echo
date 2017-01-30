@@ -26,3 +26,4 @@ _testmain.go
 echo
 vendor
 tmp/
+scripts/insertHost

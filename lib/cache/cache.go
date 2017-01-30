@@ -10,17 +10,20 @@ import (
 	"strconv"
 )
 
-// Defualt Global Variables
+// Default Global Variables.
 var (
-	RedisPort string = "6379"
-	RedisHost string = "localhost"
-	Client    *redis.Client
+	RedisPort     string = "6379"
+	RedisHost     string = "localhost"
+	RedisPassword string = ""
+	RedisDB       int    = 0
+	Client        *redis.Client
 )
 
-// The init function sets global variables and defines a Redis client
+// The init function sets global variables and defines a Redis client.
 func init() {
 	port := os.Getenv("ECHO_REDIS_PORT")
 	host := os.Getenv("ECHO_REDIS_HOST")
+	password := os.Getenv("ECHO_REDIS_PASSWORD")
 
 	if len(port) > 0 {
 		RedisPort = port
@@ -30,15 +33,19 @@ func init() {
 		RedisHost = host
 	}
 
+	if len(password) > 0 {
+		RedisPassword = password
+	}
+
 	Client = redis.NewClient(&redis.Options{
 		Addr:     concat.Concat(RedisHost, ":", RedisPort),
-		Password: "",
-		DB:       0,
+		Password: RedisPassword,
+		DB:       RedisDB,
 	})
 }
 
 // Look up a key in redis and return its value.
-func Lookup(hash string) string {
+func Get(hash string) string {
 	value, _ := Client.Get(hash).Result()
 	return value
 }
@@ -55,19 +62,30 @@ func Set(hash string, value string) string {
 	return status
 }
 
-// Generates murmur3 hash of the url, passed to the func as a string
+// Generates murmur3 hash of the url, passed to the func as a string.
 func genHash(urlString string) uint64 {
 	data := []byte(urlString)
 	return murmur3.Sum64(data)
 }
 
-// Process request context objects, check for cache.
-func Process(c *gin.Context) string {
+// Takes a request object and generates a cache key from the request details.
+func genCacheKey(c *gin.Context) string {
 	var url string = concat.Concat(
 		c.Request.Host,
 		c.Request.URL.Path,
 	)
-	var hash string = strconv.Itoa(int(genHash(url)))
-	payload := Lookup(hash)
+
+	return strconv.Itoa(int(genHash(url)))
+}
+
+// Process request context objects, check for cache.
+func Lookup(c *gin.Context) string {
+	payload := Get(genCacheKey(c))
 	return payload
+}
+
+// Takes a request object and a body, generates a cache key, and inserts into
+// the cache store.
+func Create(c *gin.Context, body string) string {
+	return Set(genCacheKey(c), string(body))
 }
