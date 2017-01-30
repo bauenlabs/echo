@@ -12,15 +12,23 @@ var (
 	InfoLog    *log.Logger
 	WarningLog *log.Logger
 	ErrorLog   *log.Logger
+	FatalLog   *log.Logger
 )
 ```
 
 #### func  Error
 
 ```go
-func Error(logString string)
+func Error(err error)
 ```
 Error prints a error log.
+
+#### func  Fatal
+
+```go
+func Fatal(err error, statusCode int)
+```
+Fatal prints a fatal error log.
 
 #### func  Info
 
