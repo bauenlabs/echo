@@ -61,20 +61,28 @@ func respondWithProxy(c *gin.Context) bool {
 	// Fetch a response object.
 	response, err := proxy.Spawn(c)
 
-	// If the response is an error, send that up the chain.
+	// If the response is an error, send a proxy error, and return true to the
+	// spawner since the proxy handled the response with a more secific failure.
 	if err != nil {
 		log.Error(err)
 		c.Data(500, "text/html", []byte(cache.Get("proxyError")))
 		return true
 	}
 
-	body, _ := ioutil.ReadAll(response.Body)
+	// Read the response body, and grab the content type.
+	body, err := ioutil.ReadAll(response.Body)
 	contentType := response.Header.Get("Content-Type")
 
-	// Respond to the client.
+	// If the body cannot be parsed, return false. This whole thing was a bust.
+	if err != nil {
+		return false
+	}
+
+	// Respond with the correct status code, content type, and body.
 	c.Data(response.StatusCode, contentType, []byte(string(body)))
 
-	// If Echo is in release mode, cache
+	// If Echo is in test mode, and this request should be cached, go ahead and
+	// create a cache object for this request.
 	if EchoMode == "test" && canBeCached(c) && response.StatusCode == http.StatusOK {
 		log.Info("Inserting item into cache.")
 		cache.Create(c, string(body))
@@ -106,13 +114,16 @@ func canBeCached(c *gin.Context) bool {
 func Spawn(c *gin.Context) {
 	// Only check the cache if this request should be cached.
 	if canBeCached(c) {
-		// Respond from cache. If that failes, fall back to proxy.
+		// Respond from cache. If that failes, fall back to proxy. If the proxy
+		// fails, respond with failure.
 		if !respondWithCache(c) {
 			if !respondWithProxy(c) {
 				respondWithFailure(c)
 			}
 		}
 	} else {
+		// If this cannot be cached, attempt to respond with a proxy. If the proxy
+		// fails, respond with failure.
 		if !respondWithProxy(c) {
 			respondWithFailure(c)
 		}
