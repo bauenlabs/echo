@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 )
 
 var (
@@ -29,8 +30,22 @@ func init() {
 // client. Returns true if a response was sent, or false if response failed.
 func respondWithCache(c *gin.Context) bool {
 	payload := []byte(cache.Lookup(c))
-	contentType := c.Request.Header.Get("Content-Type")
 
+	// Parse out accepted content type. Selecting the first content should be
+	// good enough, applications should always list the accepted content types
+	// in order of acceptability.
+	contentTypes := c.Request.Header.Get("Accept")
+	multipleIndex := strings.Index(contentTypes, ",")
+	contentType := "text/html"
+
+	// If there is only one content type, do not try to parse out the first one.
+	if multipleIndex == -1 {
+		contentType = contentTypes
+	} else {
+		contentType = contentTypes[:strings.Index(contentTypes, ",")]
+	}
+
+	// If there is a payload, respond. Otherwise, let this method return false.
 	if len(payload) > 0 {
 		log.Info("Responding with Cache.")
 		c.Data(http.StatusOK, contentType, payload)
