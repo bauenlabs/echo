@@ -47,7 +47,7 @@ func Lookup(url string) (string, error) {
 	value, err := Client.Get(url).Result()
 
 	if err != nil || len(value) <= 0 {
-		err = errors.New("Host not found.")
+		err = errors.New(concat.Concat("Host ", url, " not found."))
 	}
 
 	return value, err
