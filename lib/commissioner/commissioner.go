@@ -30,20 +30,7 @@ func init() {
 // client. Returns true if a response was sent, or false if response failed.
 func respondWithCache(c *gin.Context) bool {
 	payload := []byte(cache.Lookup(c))
-
-	// Parse out accepted content type. Selecting the first content should be
-	// good enough, applications should always list the accepted content types
-	// in order of acceptability.
-	contentTypes := c.Request.Header.Get("Accept")
-	multipleIndex := strings.Index(contentTypes, ",")
-	contentType := "text/html"
-
-	// If there is only one content type, do not try to parse out the first one.
-	if multipleIndex == -1 {
-		contentType = contentTypes
-	} else {
-		contentType = contentTypes[:strings.Index(contentTypes, ",")]
-	}
+	contentType := acceptToContentTypeHeader(c)
 
 	// If there is a payload, respond. Otherwise, let this method return false.
 	if len(payload) > 0 {
@@ -71,7 +58,6 @@ func respondWithProxy(c *gin.Context) bool {
 
 	// Read the response body, and grab the content type.
 	body, err := ioutil.ReadAll(response.Body)
-	contentType := response.Header.Get("Content-Type")
 
 	// If the body cannot be parsed, return false. This whole thing was a bust.
 	if err != nil {
@@ -79,6 +65,7 @@ func respondWithProxy(c *gin.Context) bool {
 	}
 
 	// Respond with the correct status code, content type, and body.
+	contentType := response.Header.Get("Content-Type")
 	c.Data(response.StatusCode, contentType, []byte(string(body)))
 
 	// If Echo is in test mode, and this request should be cached, go ahead and
@@ -102,11 +89,50 @@ func respondWithFailure(c *gin.Context) {
 // Inspects a context object, and returns a bool indicating  whether or not a
 // cache object could or should exist for the request response.
 func canBeCached(c *gin.Context) bool {
-	if c.Request.Method == http.MethodGet || c.Request.Method == "" {
+	if (c.Request.Method == http.MethodGet || c.Request.Method == "") && isCacheableContentType(c) {
 		return true
 	}
 
 	return false
+}
+
+// Takes a content type string, and returns true if it can/should be cached,
+// false if it should not be cached.
+func isCacheableContentType(c *gin.Context) bool {
+	contentType := acceptToContentTypeHeader(c)
+	switch contentType {
+	case
+		"text/html",
+		"application/html",
+		"text/css",
+		"application/css",
+		"text/javascript",
+		"application/javascript",
+		"text/json",
+		"application/json":
+		return true
+	}
+
+	return false
+}
+
+// Parses Accept header and figures out the primary accepted content type.
+func acceptToContentTypeHeader(c *gin.Context) string {
+	// Parse out accepted content type. Selecting the first content should be
+	// good enough, applications should always list the accepted content types
+	// in order of acceptability.
+	contentTypes := c.Request.Header.Get("Accept")
+	multipleIndex := strings.Index(contentTypes, ",")
+	contentType := "text/html"
+
+	// If there is only one content type, do not try to parse out the first one.
+	if multipleIndex == -1 {
+		contentType = contentTypes
+	} else {
+		contentType = contentTypes[:strings.Index(contentTypes, ",")]
+	}
+
+	return contentType
 }
 
 // Takes a gin request and delegates the request to the cache or proxy depending
