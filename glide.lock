@@ -1,5 +1,5 @@
-hash: c90d8d0197e43c4b68d8f45576e7834fcdaf5deccaa22a77d14b0a2a6eac7de6
-updated: 2017-01-29T18:46:30.208395838-06:00
+hash: 54d5c49c4a74f36e0bb28a9b97952d860f112318b412bf3b70ede211cc506406
+updated: 2017-02-15T19:15:01.037341826-06:00
 imports:
 - name: github.com/gin-gonic/gin
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
@@ -16,12 +16,6 @@ imports:
   version: 30a891c33c7cde7b02a981314b4228ec99380cca
 - name: github.com/spaolacci/murmur3
   version: 0d12bf811670bf6a1a63828dfbd003eded177fce
-- name: github.com/stackimpact/stackimpact-go
-  version: d390d46f2e5ff56519f4b3c9fd2bcce99d323887
-  subpackages:
-  - internal
-  - internal/pprof/profile
-  - internal/pprof/trace
 - name: github.com/stretchr/testify
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
   subpackages:
@@ -41,7 +35,7 @@ imports:
 - name: gopkg.in/go-playground/validator.v8
   version: c193cecd124b5cc722d7ee5538e945bdb3348435
 - name: gopkg.in/redis.v5
-  version: 9cd49656897843b8f2bf3d9639230cb7aec90d6c
+  version: 2fe9c5cc0a8da9faeba3a45511a4ece8f7e37dc2
   subpackages:
   - internal
   - internal/consistenthash
