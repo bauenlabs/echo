@@ -102,6 +102,7 @@ func isCacheableContentType(c *gin.Context) bool {
 	contentType := acceptToContentTypeHeader(c)
 	switch contentType {
 	case
+		"*/*",
 		"text/html",
 		"application/html",
 		"text/css",
