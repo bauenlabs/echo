@@ -30,6 +30,7 @@ func init() {
 // Custom transport struct for the proxy.
 type transport struct {
 	http.RoundTripper
+	cacheHost string
 }
 
 // Performs the round trip request, and optionally caches response.
@@ -46,12 +47,14 @@ func (t *transport) RoundTrip(request *http.Request) (response *http.Response, e
 	go func() {
 		// Read the response body, and exit if there's an error.
 		body, err := ioutil.ReadAll(response.Body)
+
 		if err != nil {
 			log.Error(err)
 		}
 
 		// Create a cache object for this request, and return.
 		log.Info("Inserting item into cache.")
+		request.Host = t.cacheHost
 		cache.Create(request, string(body))
 	}()
 
@@ -91,14 +94,14 @@ func Spawn(c *gin.Context) {
 		return
 	}
 
-	c.Request.Header.Set("Accept-Encoding", "")
-	c.Request.Host = originUrl.Host
-
 	// Form a proxy to the origin url.
 	proxy := httputil.NewSingleHostReverseProxy(originUrl)
 
 	// Replace the proxy transport with Echo's custom transport.
-	proxy.Transport = &transport{http.DefaultTransport}
+	proxy.Transport = &transport{http.DefaultTransport, c.Request.Host}
+
+	c.Request.Header.Set("Accept-Encoding", "")
+	c.Request.Host = originUrl.Host
 
 	// Write the proxy's response to the request response writer.
 	log.Info("Delegating request to proxy")
