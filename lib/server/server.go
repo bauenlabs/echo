@@ -4,8 +4,8 @@ package server
 
 import (
 	"github.com/voiceis/echo/lib/cache"
-	"github.com/voiceis/echo/lib/commissioner"
 	"github.com/voiceis/echo/lib/concat"
+	"github.com/voiceis/echo/lib/proxy"
 	"gopkg.in/gin-gonic/gin.v1"
 	"os"
 )
@@ -43,19 +43,25 @@ func init() {
 	cache.Set("generalError", "<!DOCTYPE html><html dir=ltr lang=en-US><head><title>Not Found</title><meta charset=utf-8><meta content=\"noindex, nofollow\"name=robots></head><body><header><h1 id=title>Unable to find host</h1></header><section id=descriptiong><p>This host was not found within Echo, so Echo cannot find a cached response. If you are the owner of this site, please contact an Echo administrator.</p><p>Echo's owners and mantainers appologize for this inconvenience :( We'll be looking into it shortly, and using this as an opportunity to improve our system.</p></section></body></html>")
 }
 
+// Reponds to a request with a failure.
+func teaPot(c *gin.Context) {
+	c.Data(418, "text/html", []byte(cache.Get("generalError")))
+}
+
 // Sets up an http server that handles all requests.
 func Serve() {
 	// Create a new gin router.
-	router := gin.Default()
+	r := gin.Default()
+	g := r.Group("/")
 
-	// Respond to all requests.
-	router.GET("/*param", commissioner.Spawn)
-	router.POST("/*param", commissioner.Spawn)
-	router.PUT("/*param", commissioner.Spawn)
-	router.DELETE("/*param", commissioner.Spawn)
-	router.PATCH("/*param", commissioner.Spawn)
-	router.OPTIONS("/*param", commissioner.Spawn)
+	// Respond to all requests with cache first, then proxy, then failure.
+	g.GET("/*param", cache.Middleware(), proxy.Middleware(), teaPot)
+	g.POST("/*param", cache.Middleware(), proxy.Middleware(), teaPot)
+	g.PUT("/*param", cache.Middleware(), proxy.Middleware(), teaPot)
+	g.DELETE("/*param", cache.Middleware(), proxy.Middleware(), teaPot)
+	g.PATCH("/*param", cache.Middleware(), proxy.Middleware(), teaPot)
+	g.OPTIONS("/*param", cache.Middleware(), proxy.Middleware(), teaPot)
 
 	// Start the server on the specified port.
-	router.Run(concat.Concat(":", ServerPort))
+	r.Run(concat.Concat(":", ServerPort))
 }

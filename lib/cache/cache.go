@@ -4,10 +4,13 @@ package cache
 import (
 	"github.com/spaolacci/murmur3"
 	"github.com/voiceis/echo/lib/concat"
+	"github.com/voiceis/echo/lib/log"
 	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/redis.v5"
+	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 // Default Global Variables.
@@ -88,4 +91,82 @@ func Lookup(c *gin.Context) string {
 // the cache store.
 func Create(c *gin.Context, body string) string {
 	return Set(genCacheKey(c), string(body))
+}
+
+// Inspects a context object, and returns a bool indicating  whether or not a
+// cache object could or should exist for the request response.
+func ShouldBeCached(c *gin.Context) bool {
+	if (c.Request.Method == http.MethodGet || c.Request.Method == "") && IsCacheableContentType(c) {
+		return true
+	}
+
+	return false
+}
+
+// Takes a content type string, and returns true if it can/should be cached,
+// false if it should not be cached.
+func IsCacheableContentType(c *gin.Context) bool {
+	contentType := acceptToContentTypeHeader(c)
+	switch contentType {
+	case
+		"*/*",
+		"text/html",
+		"application/html",
+		"text/css",
+		"application/css",
+		"text/javascript",
+		"application/javascript",
+		"text/json",
+		"application/json":
+		return true
+	}
+
+	return false
+}
+
+// Parses Accept header and figures out the primary accepted content type.
+func acceptToContentTypeHeader(c *gin.Context) string {
+	// Parse out accepted content type. Selecting the first content should be
+	// good enough, applications should always list the accepted content types
+	// in order of acceptability.
+	contentTypes := c.Request.Header.Get("Accept")
+	multipleIndex := strings.Index(contentTypes, ",")
+	contentType := "text/html"
+
+	// If there is only one content type, do not try to parse out the first one.
+	if multipleIndex == -1 {
+		contentType = contentTypes
+	} else {
+		contentType = contentTypes[:strings.Index(contentTypes, ",")]
+	}
+
+	return contentType
+}
+
+// Gin middleware for caching mechanism. Looks for cached values for the current
+// request, and respond with cached values if they exist. If this is not a
+// cache-able request, or there is no cached values, this middleware will just
+// skip to the next middleware.
+func Middleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// First off, check for cache-ability. If this request should never be
+		// cached, don't even start talking to the cache store.
+		if !ShouldBeCached(c) {
+			c.Next()
+			return
+		}
+
+		// Perform a cache lookup, and parse out the response content type.
+		payload := []byte(Lookup(c))
+		contentType := acceptToContentTypeHeader(c)
+
+		// If there is a payload, respond. Otherwise, move to the next middleware.
+		if len(payload) > 0 {
+			log.Info("Responding with Cache.")
+			c.Data(http.StatusOK, contentType, payload)
+			return
+		}
+
+		c.Next()
+	}
 }

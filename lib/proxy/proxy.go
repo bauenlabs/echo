@@ -3,61 +3,93 @@
 package proxy
 
 import (
+	"bytes"
 	"github.com/voiceis/echo/lib/concat"
 	"github.com/voiceis/echo/lib/host"
+	"github.com/voiceis/echo/lib/log"
 	"gopkg.in/gin-gonic/gin.v1"
+	"io/ioutil"
 	"net/http"
-	"time"
+	"net/http/httputil"
+	"net/url"
+	"strconv"
 )
 
-var netClient = &http.Client{
-	Timeout: time.Second * 10,
+// Custom transport struct for the proxy.
+type transport struct {
+	http.RoundTripper
 }
 
-func fetchUrl(c *gin.Context) (string, error) {
-	url := ""
+// Performs the round trip request, and optionally caches response.
+func (t *transport) RoundTrip(req *http.Request) (resp *http.Response, err error) {
+	resp, err = t.RoundTripper.RoundTrip(req)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = resp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	b = bytes.Replace(b, []byte("server"), []byte("schmerver"), -1)
+	body := ioutil.NopCloser(bytes.NewReader(b))
+	resp.Body = body
+	resp.ContentLength = int64(len(b))
+	resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
+	return resp, nil
+}
+
+// Fetches the origin url that the proxy should be passed to.
+func fetchUrl(c *gin.Context) (*url.URL, error) {
+	urlString := ""
 
 	// Fetch the origin's IP address.
 	originIp, err := host.Lookup(c.Request.Host)
 
 	// If there was no problem finding the host, construct url.
 	if err == nil {
-		url = concat.Concat(
+		urlString = concat.Concat(
 			"http://",
 			originIp,
 			c.Request.URL.Path,
 		)
 	}
 
-	return url, err
+	// Parse url string into a url.URL object.
+	urlObj, err := url.Parse(urlString)
+
+	return urlObj, err
 }
 
 // Takes a gin request and fetches the request results from the proxy host.
-func Spawn(c *gin.Context) (*http.Response, error) {
+func Spawn(c *gin.Context) {
 	originUrl, err := fetchUrl(c)
 
-	// If there was an issue creating the originUrl, exit.
+	// If the origin url failed to be constructed, move to the next middleware.
 	if err != nil {
-		return nil, err
+		log.Error(err)
+		c.Next()
+		return
 	}
 
-	// Create a request.
-	request, _ := http.NewRequest(c.Request.Method, originUrl, nil)
+	// Form a proxy to the origin url.
+	proxy := httputil.NewSingleHostReverseProxy(originUrl)
 
-	// Set up request object.
-	request.Host = c.Request.Host
-	request.Header = c.Request.Header
-	request.Proto = c.Request.Proto
-	request.ProtoMajor = c.Request.ProtoMajor
-	request.ProtoMinor = c.Request.ProtoMinor
+	// Replace the proxy transport with Echo's custom transport.
+	proxy.Transport = &transport{http.DefaultTransport}
 
-	// Add a host header.
-	request.Header.Set("Host", c.Request.Host)
+	// Write the proxy's response to the request response writer.
+	log.Info("Delegating request to proxy")
+	proxy.ServeHTTP(c.Writer, c.Request)
+}
 
-	// Do not accept any forms of encoding.
-	request.Header.Set("Accept-Encoding", "")
-
-	// Perform the request and return it.
-	response, err := netClient.Do(request)
-	return response, err
+// Gin middleware wrapper for Spawn method.
+func Middleware() gin.HandlerFunc {
+	return Spawn
 }
