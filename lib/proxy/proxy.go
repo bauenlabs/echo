@@ -78,11 +78,14 @@ func Spawn(c *gin.Context) {
 		return
 	}
 
+	c.Request.Header.Set("Accept-Encoding", "")
+	c.Request.Host = originUrl.Host
+
 	// Form a proxy to the origin url.
 	proxy := httputil.NewSingleHostReverseProxy(originUrl)
 
 	// Replace the proxy transport with Echo's custom transport.
-	proxy.Transport = &transport{http.DefaultTransport}
+	//proxy.Transport = &transport{http.DefaultTransport}
 
 	// Write the proxy's response to the request response writer.
 	log.Info("Delegating request to proxy")
