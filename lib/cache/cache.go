@@ -72,31 +72,31 @@ func genHash(urlString string) uint64 {
 }
 
 // Takes a request object and generates a cache key from the request details.
-func genCacheKey(c *gin.Context) string {
+func genCacheKey(r *http.Request) string {
 	var url string = concat.Concat(
-		c.Request.Host,
-		c.Request.URL.Path,
+		r.Host,
+		r.URL.Path,
 	)
 
 	return strconv.Itoa(int(genHash(url)))
 }
 
 // Process request context objects, check for cache.
-func Lookup(c *gin.Context) string {
-	payload := Get(genCacheKey(c))
+func Lookup(r *http.Request) string {
+	payload := Get(genCacheKey(r))
 	return payload
 }
 
 // Takes a request object and a body, generates a cache key, and inserts into
 // the cache store.
-func Create(c *gin.Context, body string) string {
-	return Set(genCacheKey(c), string(body))
+func Create(r *http.Request, body string) string {
+	return Set(genCacheKey(r), body)
 }
 
 // Inspects a context object, and returns a bool indicating  whether or not a
 // cache object could or should exist for the request response.
-func ShouldBeCached(c *gin.Context) bool {
-	if (c.Request.Method == http.MethodGet || c.Request.Method == "") && IsCacheableContentType(c) {
+func ShouldBeCached(r *http.Request) bool {
+	if (r.Method == http.MethodGet || r.Method == "") && IsCacheableContentType(r) {
 		return true
 	}
 
@@ -105,8 +105,8 @@ func ShouldBeCached(c *gin.Context) bool {
 
 // Takes a content type string, and returns true if it can/should be cached,
 // false if it should not be cached.
-func IsCacheableContentType(c *gin.Context) bool {
-	contentType := acceptToContentTypeHeader(c)
+func IsCacheableContentType(r *http.Request) bool {
+	contentType := acceptToContentTypeHeader(r)
 	switch contentType {
 	case
 		"*/*",
@@ -125,11 +125,11 @@ func IsCacheableContentType(c *gin.Context) bool {
 }
 
 // Parses Accept header and figures out the primary accepted content type.
-func acceptToContentTypeHeader(c *gin.Context) string {
+func acceptToContentTypeHeader(r *http.Request) string {
 	// Parse out accepted content type. Selecting the first content should be
 	// good enough, applications should always list the accepted content types
 	// in order of acceptability.
-	contentTypes := c.Request.Header.Get("Accept")
+	contentTypes := r.Header.Get("Accept")
 	multipleIndex := strings.Index(contentTypes, ",")
 	contentType := "text/html"
 
@@ -151,14 +151,13 @@ func Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// First off, check for cache-ability. If this request should never be
 		// cached, don't even start talking to the cache store.
-		if !ShouldBeCached(c) {
-			c.Next()
+		if !ShouldBeCached(c.Request) {
 			return
 		}
 
 		// Perform a cache lookup, and parse out the response content type.
-		payload := []byte(Lookup(c))
-		contentType := acceptToContentTypeHeader(c)
+		payload := []byte(Lookup(c.Request))
+		contentType := acceptToContentTypeHeader(c.Request)
 
 		// If there is a payload, respond. Otherwise, move to the next middleware.
 		if len(payload) > 0 {
@@ -166,7 +165,5 @@ func Middleware() gin.HandlerFunc {
 			c.Data(http.StatusOK, contentType, payload)
 			return
 		}
-
-		c.Next()
 	}
 }

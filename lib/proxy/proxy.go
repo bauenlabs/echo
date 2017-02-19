@@ -3,7 +3,7 @@
 package proxy
 
 import (
-	"bytes"
+	"github.com/voiceis/echo/lib/cache"
 	"github.com/voiceis/echo/lib/concat"
 	"github.com/voiceis/echo/lib/host"
 	"github.com/voiceis/echo/lib/log"
@@ -12,8 +12,20 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"strconv"
+	"os"
 )
+
+var EchoMode string = "release"
+
+// Initialize this package.
+func init() {
+	mode := os.Getenv("ECHO_MODE")
+
+	// If a mode environment variable is specified, override default.
+	if len(mode) > 0 {
+		EchoMode = mode
+	}
+}
 
 // Custom transport struct for the proxy.
 type transport struct {
@@ -21,28 +33,29 @@ type transport struct {
 }
 
 // Performs the round trip request, and optionally caches response.
-func (t *transport) RoundTrip(req *http.Request) (resp *http.Response, err error) {
-	resp, err = t.RoundTripper.RoundTrip(req)
-	if err != nil {
-		return nil, err
+func (t *transport) RoundTrip(request *http.Request) (response *http.Response, err error) {
+	// Spawn the round trip. If an error is return, return no response and an err.
+	response, err = t.RoundTripper.RoundTrip(request)
+
+	// If this is not supposed to be cached, return right away.
+	if EchoMode != "test" || !cache.ShouldBeCached(request) || response.StatusCode != http.StatusOK {
+		return response, err
 	}
 
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
+	// Spawn a routine to insert this item into the cache.
+	go func() {
+		// Read the response body, and exit if there's an error.
+		body, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			log.Error(err)
+		}
 
-	err = resp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
+		// Create a cache object for this request, and return.
+		log.Info("Inserting item into cache.")
+		cache.Create(request, string(body))
+	}()
 
-	b = bytes.Replace(b, []byte("server"), []byte("schmerver"), -1)
-	body := ioutil.NopCloser(bytes.NewReader(b))
-	resp.Body = body
-	resp.ContentLength = int64(len(b))
-	resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
-	return resp, nil
+	return response, err
 }
 
 // Fetches the origin url that the proxy should be passed to.
@@ -74,7 +87,7 @@ func Spawn(c *gin.Context) {
 	// If the origin url failed to be constructed, move to the next middleware.
 	if err != nil {
 		log.Error(err)
-		c.Next()
+		c.Data(418, "text/html", []byte(cache.Get("proxyError")))
 		return
 	}
 
@@ -85,7 +98,7 @@ func Spawn(c *gin.Context) {
 	proxy := httputil.NewSingleHostReverseProxy(originUrl)
 
 	// Replace the proxy transport with Echo's custom transport.
-	//proxy.Transport = &transport{http.DefaultTransport}
+	proxy.Transport = &transport{http.DefaultTransport}
 
 	// Write the proxy's response to the request response writer.
 	log.Info("Delegating request to proxy")
