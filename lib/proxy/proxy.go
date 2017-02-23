@@ -42,7 +42,7 @@ func (t *transport) RoundTrip(request *http.Request) (response *http.Response, e
 	response, err = t.RoundTripper.RoundTrip(request)
 
 	// If this is not supposed to be cached, return right away.
-	if EchoMode != "test" || !cache.ShouldBeCached(request) || response.StatusCode != http.StatusOK {
+	if EchoMode != "test" || !cache.ShouldBeCached(request) || response.StatusCode != 304 {
 		return response, err
 	}
 
