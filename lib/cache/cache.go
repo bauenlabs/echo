@@ -2,7 +2,6 @@
 package cache
 
 import (
-	"fmt"
 	"github.com/spaolacci/murmur3"
 	"github.com/voiceis/echo/lib/concat"
 	"github.com/voiceis/echo/lib/log"
@@ -91,7 +90,6 @@ func Lookup(r *http.Request) string {
 // Takes a request object and a body, generates a cache key, and inserts into
 // the cache store.
 func Create(r *http.Request, body string) string {
-	fmt.Println(body)
 	return Set(genCacheKey(r), body)
 }
 

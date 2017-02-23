@@ -35,6 +35,9 @@ type transport struct {
 
 // Performs the round trip request, and optionally caches response.
 func (t *transport) RoundTrip(request *http.Request) (response *http.Response, err error) {
+	request.Header.Set("Host", t.cacheHost)
+	request.Host = t.cacheHost
+
 	// Spawn the round trip. If an error is return, return no response and an err.
 	response, err = t.RoundTripper.RoundTrip(request)
 
@@ -54,7 +57,6 @@ func (t *transport) RoundTrip(request *http.Request) (response *http.Response, e
 
 		// Create a cache object for this request, and return.
 		log.Info("Inserting item into cache.")
-		request.Host = t.cacheHost
 		cache.Create(request, string(body))
 	}()
 
