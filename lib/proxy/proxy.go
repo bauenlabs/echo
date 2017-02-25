@@ -16,15 +16,15 @@ import (
 	"os"
 )
 
-var EchoMode string = "release"
+var EchoCache string = "true"
 
 // Initialize this package.
 func init() {
-	mode := os.Getenv("ECHO_MODE")
+	cache := os.Getenv("ECHO_CACHE")
 
-	// If a mode environment variable is specified, override default.
-	if len(mode) > 0 {
-		EchoMode = mode
+	// If the cache env variable has been set, overwrite the EchoCache var.
+	if len(cache) > 0 {
+		EchoCache = cache
 	}
 }
 
@@ -43,7 +43,7 @@ func (t *transport) RoundTrip(request *http.Request) (response *http.Response, e
 	response, err = t.RoundTripper.RoundTrip(request)
 
 	// If this is not supposed to be cached, return right away.
-	if EchoMode != "test" || !cache.ShouldBeCached(request) || response.StatusCode != 200 {
+	if EchoCache != "true" || !cache.ShouldBeCached(request) || response.StatusCode != 200 {
 		return response, err
 	}
 
