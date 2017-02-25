@@ -163,7 +163,7 @@ func Middleware() gin.HandlerFunc {
 		if len(payload) > 0 {
 			log.Info("Responding with Cache.")
 			c.Data(http.StatusOK, contentType, payload)
-			c.AbortWithStatus(http.StatusOK)
+			c.Abort()
 			return
 		}
 	}

@@ -3,6 +3,7 @@
 package proxy
 
 import (
+	"bytes"
 	"github.com/voiceis/echo/lib/cache"
 	"github.com/voiceis/echo/lib/concat"
 	"github.com/voiceis/echo/lib/host"
@@ -42,20 +43,27 @@ func (t *transport) RoundTrip(request *http.Request) (response *http.Response, e
 	response, err = t.RoundTripper.RoundTrip(request)
 
 	// If this is not supposed to be cached, return right away.
-	if EchoMode != "test" || !cache.ShouldBeCached(request) || response.StatusCode != 304 {
+	if EchoMode != "test" || !cache.ShouldBeCached(request) || response.StatusCode != 200 {
 		return response, err
 	}
 
-	// Spawn a routine to insert this item into the cache.
+	// Read response body, and then re-set it to it's original state. This must
+	// be done prior to attempting to cache the response, and prior to this
+	// transport's returning of the response. This is admitidly slow, but in order
+	// to cache the body, the full body value must be received from the network.
+	// Once the body has been read once, it must be re-set to it's initial value
+	// to be readable again. This is slow, but it is nessecary, and all subsequent
+	// reads of the response body will be much more quick, as it's not receiving
+	// the bytes from the network, it's fetching them from memory.
+	body, parseErr := ioutil.ReadAll(response.Body)
+	response.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+
+	if parseErr != nil {
+		log.Error(parseErr)
+	}
+
+	// Spawn an asyncronous subroutine to insert this item into the cache.
 	go func() {
-		// Read the response body, and exit if there's an error.
-		body, err := ioutil.ReadAll(response.Body)
-
-		if err != nil {
-			log.Error(err)
-		}
-
-		// Create a cache object for this request, and return.
 		log.Info("Inserting item into cache.")
 		cache.Create(request, string(body))
 	}()
