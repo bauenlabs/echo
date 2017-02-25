@@ -37,6 +37,7 @@ type transport struct {
 // Performs the round trip request, and optionally caches response.
 func (t *transport) RoundTrip(request *http.Request) (response *http.Response, err error) {
 	request.Header.Set("Host", t.cacheHost)
+	request.Header.Set("Accept-Encoding", "")
 	request.Host = t.cacheHost
 
 	// Spawn the round trip. If an error is return, return no response and an err.
@@ -72,7 +73,7 @@ func (t *transport) RoundTrip(request *http.Request) (response *http.Response, e
 }
 
 // Fetches the origin url that the proxy should be passed to.
-func fetchUrl(c *gin.Context) (*url.URL, error) {
+func fetchOriginUrl(c *gin.Context) (*url.URL, error) {
 	urlString := ""
 
 	// Fetch the origin's IP address.
@@ -83,7 +84,6 @@ func fetchUrl(c *gin.Context) (*url.URL, error) {
 		urlString = concat.Concat(
 			"http://",
 			originIp,
-			c.Request.URL.Path,
 		)
 	}
 
@@ -95,7 +95,7 @@ func fetchUrl(c *gin.Context) (*url.URL, error) {
 
 // Takes a gin request and fetches the request results from the proxy host.
 func Spawn(c *gin.Context) {
-	originUrl, err := fetchUrl(c)
+	originUrl, err := fetchOriginUrl(c)
 
 	// If the origin url failed to be constructed, move to the next middleware.
 	if err != nil {
@@ -109,9 +109,6 @@ func Spawn(c *gin.Context) {
 
 	// Replace the proxy transport with Echo's custom transport.
 	proxy.Transport = &transport{http.DefaultTransport, c.Request.Host}
-
-	c.Request.Header.Set("Accept-Encoding", "")
-	c.Request.Host = originUrl.Host
 
 	// Write the proxy's response to the request response writer.
 	log.Info("Delegating request to proxy")
