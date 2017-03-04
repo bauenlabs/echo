@@ -20,7 +20,7 @@ Default Global Variables.
 #### func  Create
 
 ```go
-func Create(c *gin.Context, body string) string
+func Create(r *http.Request, body string) string
 ```
 Takes a request object and a body, generates a cache key, and inserts into the
 cache store.
@@ -39,12 +39,30 @@ func Get(hash string) string
 ```
 Look up a key in redis and return its value.
 
+#### func  IsCacheableContentType
+
+```go
+func IsCacheableContentType(r *http.Request) bool
+```
+Takes a content type string, and returns true if it can/should be cached, false
+if it should not be cached.
+
 #### func  Lookup
 
 ```go
-func Lookup(c *gin.Context) string
+func Lookup(r *http.Request) string
 ```
 Process request context objects, check for cache.
+
+#### func  Middleware
+
+```go
+func Middleware() gin.HandlerFunc
+```
+Gin middleware for caching mechanism. Looks for cached values for the current
+request, and respond with cached values if they exist. If this is not a
+cache-able request, or there is no cached values, this middleware will just skip
+to the next middleware.
 
 #### func  Set
 
@@ -52,3 +70,11 @@ Process request context objects, check for cache.
 func Set(hash string, value string) string
 ```
 Create new key/value or update existing one.
+
+#### func  ShouldBeCached
+
+```go
+func ShouldBeCached(r *http.Request) bool
+```
+Inspects a context object, and returns a bool indicating whether or not a cache
+object could or should exist for the request response.
