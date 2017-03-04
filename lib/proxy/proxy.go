@@ -31,14 +31,14 @@ func init() {
 // Custom transport struct for the proxy.
 type transport struct {
 	http.RoundTripper
-	cacheHost string
+	originalRequest *http.Request
 }
 
 // Performs the round trip request, and optionally caches response.
 func (t *transport) RoundTrip(request *http.Request) (response *http.Response, err error) {
-	request.Header.Set("Host", t.cacheHost)
+	request.Header.Set("Host", t.originalRequest.Host)
 	request.Header.Set("Accept-Encoding", "")
-	request.Host = t.cacheHost
+	request.Host = t.originalRequest.Host
 
 	// Spawn the round trip. If an error is return, return no response and an err.
 	response, err = t.RoundTripper.RoundTrip(request)
@@ -66,7 +66,7 @@ func (t *transport) RoundTrip(request *http.Request) (response *http.Response, e
 	// Spawn an asyncronous subroutine to insert this item into the cache.
 	go func() {
 		log.Info("Inserting item into cache.")
-		cache.Create(request, string(body))
+		cache.Create(t.originalRequest, string(body))
 	}()
 
 	return response, err
@@ -108,7 +108,7 @@ func Spawn(c *gin.Context) {
 	proxy := httputil.NewSingleHostReverseProxy(originUrl)
 
 	// Replace the proxy transport with Echo's custom transport.
-	proxy.Transport = &transport{http.DefaultTransport, c.Request.Host}
+	proxy.Transport = &transport{http.DefaultTransport, c.Request}
 
 	// Write the proxy's response to the request response writer.
 	log.Info("Delegating request to proxy")

@@ -9,6 +9,7 @@ import (
 	"gopkg.in/redis.v5"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -73,10 +74,21 @@ func genHash(urlString string) uint64 {
 
 // Takes a request object and generates a cache key from the request details.
 func genCacheKey(r *http.Request) string {
-	var url string = concat.Concat(
+	url := concat.Concat(
 		r.Host,
 		r.URL.Path,
 	)
+
+	// Create a map of header key strings so that they can be sorted.
+	var headers []string
+	for key, _ := range r.Header {
+		headers = append(headers, key)
+	}
+	sort.Strings(headers)
+
+	for _, key := range headers {
+		url = concat.Concat(url, strings.Join(r.Header[key], ""))
+	}
 
 	return strconv.Itoa(int(genHash(url)))
 }
