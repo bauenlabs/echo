@@ -15,17 +15,20 @@ Echo is a highly optimized caching mechanism.
 ### Environment Variables
 * Ensure the following environment variables exist and have valid values:
 ```shell
-# Path at which Redis can be contacted.
+# Path at which Redis can be contacted. Defaults to localhost.
 export ECHO_REDIS_HOST="localhost"
 
-# Port at which Redis can be contacted.
+# Port at which Redis can be contacted. Defaults to 6379.
 export ECHO_REDIS_PORT="6379"
 
-# Port on which the Echo server should run.
+# Port on which the Echo server should run. Defaults to 8000.
 export ECHO_SERVER_PORT="8000"
 
-# Logging mode for server.
+# Logging mode for server. Defaults to release.
 export ECHO_MODE="release|debug|test"
+
+# Toggle whether or not requests are cached. Defaults to true.
+export ECHO_CACHE="true"
 ```
 
 ### Workflow
