@@ -3,7 +3,7 @@ package host
 
 import (
 	"errors"
-	"github.com/voiceis/echo/lib/concat"
+	"github.com/bauenlabs/echo/lib/concat"
 	"gopkg.in/redis.v5"
 	"os"
 )

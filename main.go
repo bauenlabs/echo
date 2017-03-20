@@ -2,7 +2,7 @@
 package main
 
 import (
-	"github.com/voiceis/echo/lib/server"
+	"github.com/bauenlabs/echo/lib/server"
 )
 
 // Executes the Echo server.
