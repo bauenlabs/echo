@@ -3,7 +3,7 @@ package cache_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/voiceis/echo/lib/cache"
+	"github.com/bauenlabs/echo/lib/cache"
 	"os"
 	"reflect"
 	"testing"

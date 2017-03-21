@@ -1,6 +1,6 @@
 # cache
 --
-    import "github.com/voiceis/echo/lib/cache"
+    import "github.com/bauenlabs/echo/lib/cache"
 
 The cache package interacts with the Redis store containing cached items
 

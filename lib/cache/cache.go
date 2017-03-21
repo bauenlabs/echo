@@ -3,8 +3,8 @@ package cache
 
 import (
 	"github.com/spaolacci/murmur3"
-	"github.com/voiceis/echo/lib/concat"
-	"github.com/voiceis/echo/lib/log"
+	"github.com/bauenlabs/echo/lib/concat"
+	"github.com/bauenlabs/echo/lib/log"
 	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/redis.v5"
 	"net/http"

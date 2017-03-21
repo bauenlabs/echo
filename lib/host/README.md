@@ -1,6 +1,6 @@
 # host
 --
-    import "github.com/voiceis/echo/lib/host"
+    import "github.com/bauenlabs/echo/lib/host"
 
 Package host fetches the IP addresses of hosts with a given url.
 

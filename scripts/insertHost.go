@@ -3,7 +3,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/voiceis/echo/lib/host"
+	"github.com/bauenlabs/echo/lib/host"
 	"os"
 )
 

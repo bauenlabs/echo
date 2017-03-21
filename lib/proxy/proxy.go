@@ -4,10 +4,10 @@ package proxy
 
 import (
 	"bytes"
-	"github.com/voiceis/echo/lib/cache"
-	"github.com/voiceis/echo/lib/concat"
-	"github.com/voiceis/echo/lib/host"
-	"github.com/voiceis/echo/lib/log"
+	"github.com/bauenlabs/echo/lib/cache"
+	"github.com/bauenlabs/echo/lib/concat"
+	"github.com/bauenlabs/echo/lib/host"
+	"github.com/bauenlabs/echo/lib/log"
 	"gopkg.in/gin-gonic/gin.v1"
 	"io/ioutil"
 	"net/http"

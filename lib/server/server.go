@@ -3,9 +3,9 @@
 package server
 
 import (
-	"github.com/voiceis/echo/lib/cache"
-	"github.com/voiceis/echo/lib/concat"
-	"github.com/voiceis/echo/lib/proxy"
+	"github.com/bauenlabs/echo/lib/cache"
+	"github.com/bauenlabs/echo/lib/concat"
+	"github.com/bauenlabs/echo/lib/proxy"
 	"gopkg.in/gin-gonic/gin.v1"
 	"os"
 )

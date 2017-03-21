@@ -1,6 +1,6 @@
 # proxy
 --
-    import "github.com/voiceis/echo/lib/proxy"
+    import "github.com/bauenlabs/echo/lib/proxy"
 
 Package proxy contains a Spawn method that takes a gin request and fetches the
 response from actual host (proxy).

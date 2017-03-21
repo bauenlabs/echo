@@ -1,6 +1,6 @@
 # log
 --
-    import "github.com/voiceis/echo/lib/log"
+    import "github.com/bauenlabs/echo/lib/log"
 
 Package log provides a standard set of logging tools.
 

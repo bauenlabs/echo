@@ -1,6 +1,6 @@
 # concat
 --
-    import "github.com/voiceis/echo/lib/concat"
+    import "github.com/bauenlabs/echo/lib/concat"
 
 concat provides a highly optimized string concatenation method.
 
