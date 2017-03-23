@@ -1,0 +1,9 @@
+machine:
+  environment:
+    ECHO_REDIS_HOST: localhost
+    ECHO_REDIS_PORT: 6379
+    ECHO_SERVER_PORT: 8000
+    ECHO_MODE: release
+  services:
+    - redis
+
