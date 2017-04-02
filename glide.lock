@@ -1,6 +1,8 @@
-hash: 54d5c49c4a74f36e0bb28a9b97952d860f112318b412bf3b70ede211cc506406
-updated: 2017-02-15T19:15:01.037341826-06:00
+hash: cd577aab7ded1983a648018429abdc09163e00473d664c5942ba82f524792ccf
+updated: 2017-04-01T21:03:15.183728616-05:00
 imports:
+- name: github.com/bauenlabs/scribe
+  version: 5ad886f3a81a84662f9aa0f0d2babd38ea46ed63
 - name: github.com/gin-gonic/gin
   version: e2212d40c62a98b388a5eb48ecbdcf88534688ba
   subpackages:
@@ -13,7 +15,7 @@ imports:
 - name: github.com/manucorporat/sse
   version: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
 - name: github.com/mattn/go-isatty
-  version: 30a891c33c7cde7b02a981314b4228ec99380cca
+  version: fc9e8d8ef48496124e79ae0df75490096eccf6fe
 - name: github.com/spaolacci/murmur3
   version: 0d12bf811670bf6a1a63828dfbd003eded177fce
 - name: github.com/stretchr/testify
@@ -25,7 +27,7 @@ imports:
   subpackages:
   - context
 - name: golang.org/x/sys
-  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  version: 9a7256cb28ed514b4e1e5f68959914c4c28a92e0
   subpackages:
   - unix
 - name: gopkg.in/bsm/ratelimit.v1
@@ -35,7 +37,7 @@ imports:
 - name: gopkg.in/go-playground/validator.v8
   version: c193cecd124b5cc722d7ee5538e945bdb3348435
 - name: gopkg.in/redis.v5
-  version: 2fe9c5cc0a8da9faeba3a45511a4ece8f7e37dc2
+  version: a16aeec10ff407b1e7be6dd35797ccf5426ef0f0
   subpackages:
   - internal
   - internal/consistenthash
@@ -43,7 +45,7 @@ imports:
   - internal/pool
   - internal/proto
 - name: gopkg.in/yaml.v2
-  version: a5b47d31c556af34a302ce5d659e6fea44d90de0
+  version: a3f3340b5840cee44f372bddb5880fcbc419b46a
 testImports:
 - name: github.com/davecgh/go-spew
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
