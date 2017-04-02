@@ -7,7 +7,7 @@ import (
 	"github.com/bauenlabs/echo/lib/cache"
 	"github.com/bauenlabs/echo/lib/concat"
 	"github.com/bauenlabs/echo/lib/host"
-	"github.com/bauenlabs/echo/lib/log"
+	log "github.com/bauenlabs/scribe"
 	"gopkg.in/gin-gonic/gin.v1"
 	"io/ioutil"
 	"net/http"

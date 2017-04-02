@@ -2,9 +2,9 @@
 package cache
 
 import (
-	"github.com/spaolacci/murmur3"
 	"github.com/bauenlabs/echo/lib/concat"
-	"github.com/bauenlabs/echo/lib/log"
+	log "github.com/bauenlabs/scribe"
+	"github.com/spaolacci/murmur3"
 	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/redis.v5"
 	"net/http"
