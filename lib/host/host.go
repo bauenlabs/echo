@@ -3,7 +3,7 @@ package host
 
 import (
 	"errors"
-	"github.com/bauenlabs/echo/lib/concat"
+	"github.com/bauenlabs/rivet"
 	"gopkg.in/redis.v5"
 	"os"
 )
@@ -36,7 +36,7 @@ func init() {
 	}
 
 	Client = redis.NewClient(&redis.Options{
-		Addr:     concat.Concat(RedisHost, ":", RedisPort),
+		Addr:     rivet.Concat(RedisHost, ":", RedisPort),
 		Password: RedisPassword,
 		DB:       RedisDB,
 	})
@@ -47,7 +47,7 @@ func Lookup(url string) (string, error) {
 	value, err := Client.Get(url).Result()
 
 	if err != nil || len(value) <= 0 {
-		err = errors.New(concat.Concat("Host ", url, " not found."))
+		err = errors.New(rivet.Concat("Host ", url, " not found."))
 	}
 
 	return value, err

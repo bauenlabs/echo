@@ -1,6 +1,8 @@
-hash: cd577aab7ded1983a648018429abdc09163e00473d664c5942ba82f524792ccf
-updated: 2017-04-01T21:03:15.183728616-05:00
+hash: c46aeef4b9ebe4dd21ca21fcde81ca28127d4216bac33cd4444e38737bf07acf
+updated: 2017-04-05T20:09:45.725458549-05:00
 imports:
+- name: github.com/bauenlabs/rivet
+  version: b273d82aa21dc635e8da3d11ca9a96d5b293cab1
 - name: github.com/bauenlabs/scribe
   version: 5ad886f3a81a84662f9aa0f0d2babd38ea46ed63
 - name: github.com/gin-gonic/gin
@@ -27,7 +29,7 @@ imports:
   subpackages:
   - context
 - name: golang.org/x/sys
-  version: 9a7256cb28ed514b4e1e5f68959914c4c28a92e0
+  version: 39e3dc274464e7d2f663aa606a830611bae5f1db
   subpackages:
   - unix
 - name: gopkg.in/bsm/ratelimit.v1
