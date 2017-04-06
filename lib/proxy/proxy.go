@@ -5,8 +5,8 @@ package proxy
 import (
 	"bytes"
 	"github.com/bauenlabs/echo/lib/cache"
-	"github.com/bauenlabs/echo/lib/concat"
 	"github.com/bauenlabs/echo/lib/host"
+	"github.com/bauenlabs/rivet"
 	log "github.com/bauenlabs/scribe"
 	"gopkg.in/gin-gonic/gin.v1"
 	"io/ioutil"
@@ -81,7 +81,7 @@ func fetchOriginUrl(c *gin.Context) (*url.URL, error) {
 
 	// If there was no problem finding the host, construct url.
 	if err == nil {
-		urlString = concat.Concat(
+		urlString = rivet.Concat(
 			"http://",
 			originIp,
 		)

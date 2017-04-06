@@ -4,8 +4,8 @@ package server
 
 import (
 	"github.com/bauenlabs/echo/lib/cache"
-	"github.com/bauenlabs/echo/lib/concat"
 	"github.com/bauenlabs/echo/lib/proxy"
+	"github.com/bauenlabs/rivet"
 	"gopkg.in/gin-gonic/gin.v1"
 	"os"
 )
@@ -58,5 +58,5 @@ func Serve() {
 	g.OPTIONS("/*param", cache.Middleware(), proxy.Middleware())
 
 	// Start the server on the specified port.
-	r.Run(concat.Concat(":", ServerPort))
+	r.Run(rivet.Concat(":", ServerPort))
 }

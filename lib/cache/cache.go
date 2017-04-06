@@ -2,7 +2,7 @@
 package cache
 
 import (
-	"github.com/bauenlabs/echo/lib/concat"
+	"github.com/bauenlabs/rivet"
 	log "github.com/bauenlabs/scribe"
 	"github.com/spaolacci/murmur3"
 	"gopkg.in/gin-gonic/gin.v1"
@@ -42,7 +42,7 @@ func init() {
 	}
 
 	Client = redis.NewClient(&redis.Options{
-		Addr:     concat.Concat(RedisHost, ":", RedisPort),
+		Addr:     rivet.Concat(RedisHost, ":", RedisPort),
 		Password: RedisPassword,
 		DB:       RedisDB,
 	})
@@ -74,7 +74,7 @@ func genHash(urlString string) uint64 {
 
 // Takes a request object and generates a cache key from the request details.
 func genCacheKey(r *http.Request) string {
-	url := concat.Concat(
+	url := rivet.Concat(
 		r.Host,
 		r.URL.Path,
 	)
@@ -87,7 +87,7 @@ func genCacheKey(r *http.Request) string {
 	sort.Strings(headers)
 
 	for _, key := range headers {
-		url = concat.Concat(url, strings.Join(r.Header[key], ""))
+		url = rivet.Concat(url, strings.Join(r.Header[key], ""))
 	}
 
 	return strconv.Itoa(int(genHash(url)))

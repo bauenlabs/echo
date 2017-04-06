@@ -11,3 +11,5 @@ import:
 - package: gopkg.in/gin-gonic/gin.v1
   version: ^1.1.4
 - package: github.com/bauenlabs/scribe
+- package: github.com/bauenlabs/rivet
+  version: ~1.0.0-beta1
