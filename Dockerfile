@@ -6,6 +6,11 @@ FROM golang
 ADD . /go/src/github.com/bauenlabs/echo
 
 # Build and install Echo and its dependencies
+RUN go get github.com/bauenlabs/rivet
+RUN go get github.com/bauenlabs/scribe
+RUN go get github.com/spaolacci/murmur3
+RUN go get gopkg.in/gin-gonic/gin.v1
+RUN go get gopkg.in/redis.v5
 RUN go install github.com/bauenlabs/echo
 
 # Configure Environmental Variables
